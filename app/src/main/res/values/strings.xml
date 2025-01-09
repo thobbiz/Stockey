@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">project-umbrella</string>
+    <string name="product_name">Product Name</string>
+    <string name="required_fields">All are Required Fields</string>
+    <string name="add_new_product">Add New Product</string>
+    <string name="back_button">Back Button</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="empty_inventory">"Yeah, nothing is here..."</string>
+    <string name="in_store">%d in Store</string>
+    <string name="inventory">Inventory</string>
+    <string name="add_product">Add Product</string>
+    <string name="cost_price">Cost Price</string>
+    <string name="selling_price">Selling Price</string>
+    <string name="product">Product</string>
+    <string name="quantity_in_store">Quantity</string>
+    <string name="attention">Attention</string>
+    <string name="no">No</string>
+    <string name="delete_question">Are you sure you want to delete this product?</string>
+    <string name="yes">Yes</string>
+    <string name="product_details">Product Details</string>
+    <string name="edit">Edit</string>
+    <string name="text">text</string>
+    <string name="save">Save Product</string>
+    <string name="delete">Delete</string>
+    <string name="welcome">Welcome</string>
+    <string name="shopping_cart">Shopping cart</string>
+    <string name="product_out">Product Out</string>
+    <string name="product_in">Product In</string>
+    <string name="info">Info</string>
+    <string name="total_products">Total Products</string>
+    <string name="total_stocks">Stock in Hand</string>
+    <string name="products_list">Products list</string>
+    <string name="measurement_unit">Measurement unit</string>
+    <string name="home">Home</string>
+</resources>
