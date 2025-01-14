@@ -9,40 +9,51 @@ import androidx.compose.ui.unit.sp
 import com.example.project_umbrella.R
 
 
-val Geist = FontFamily(
-    Font(R.font.circularstd_bold),
-    Font(R.font.circularstd_medium)
+val Univers = FontFamily(
+    Font(R.font.universe_regular)
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = Geist,
+        fontFamily = Univers,
         fontSize = 20.sp,
     ),
 
     bodySmall = TextStyle(
-        fontFamily = Geist,
-        fontSize = 12.sp,
+        fontFamily = Univers,
+        fontSize = 14.sp,
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = Univers,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Thin
     ),
     displayLarge = TextStyle(
-        fontFamily = Geist,
-        fontSize = 36.sp
+        fontFamily = Univers,
+        fontSize = 36.sp,
+        fontWeight = FontWeight.Bold
     ),
     displayMedium = TextStyle(
-        fontFamily = Geist,
-        fontSize = 30.sp
+        fontFamily = Univers,
+        fontSize = 24.sp
     ),
     displaySmall = TextStyle(
-        fontFamily = Geist,
+        fontFamily = Univers,
         fontSize = 20.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = Geist,
+        fontFamily = Univers,
         fontSize = 14.sp
     ),
-    bodyMedium = TextStyle(
-        fontFamily = Geist,
-        fontSize = 14.sp
+    labelLarge = TextStyle(
+        fontFamily = Univers,
+        fontSize = 20.sp
+    ),
+
+    labelMedium = TextStyle(
+        fontFamily = Univers,
+        fontSize = 17.sp,
+        fontWeight = FontWeight.Thin
     )
 )

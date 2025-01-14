@@ -15,6 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.project_umbrella.ui.NavBar
 import com.example.project_umbrella.ui.navigation.InventoryNavHost
+import com.example.project_umbrella.ui.navigation.currentScreen
+import com.example.project_umbrella.ui.navigation.navigateTo
+import com.example.project_umbrella.ui.screens.HomeScreens.HomeDestination
+import com.example.project_umbrella.ui.screens.inventory.InventoryDestination
 import com.example.project_umbrella.ui.theme.ProjectumbrellaTheme
 
 class MainActivity : ComponentActivity() {
@@ -44,7 +48,26 @@ fun InventoryApp() {
     ) {
         Scaffold(
             bottomBar = {
-                NavBar()
+                navController.currentScreen()?.let {
+                    NavBar(
+                        navigateToHome = {
+                            navController.navigateTo(
+                                HomeDestination
+                            )
+                        },
+                        navigateToInventory = {
+                            navController.navigateTo(
+                                InventoryDestination
+                            )
+                        },
+                        navigateToSettings = {
+                        },
+                        navigateToGraphs =  {
+
+                        },
+                        currentScreen = it
+                    )
+                }
             }
         ) { innerPadding ->
             InventoryNavHost(navController = navController, modifier = Modifier.padding(innerPadding))

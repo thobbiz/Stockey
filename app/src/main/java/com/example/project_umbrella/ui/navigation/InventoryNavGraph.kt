@@ -4,11 +4,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.project_umbrella.ui.screens.HomeScreens.HomeDestination
 import com.example.project_umbrella.ui.screens.HomeScreens.HomeScreen
@@ -102,12 +104,12 @@ fun InventoryNavHost(
 fun NavHostController.navigateTo(navigationDestination: NavigationDestination) {
     this.navigate(navigationDestination.route) {
         launchSingleTop = true
-//        graph.startDestinationRoute?.let {
-//            popUpTo(it) {
-//                inclusive = false
-//                saveState = true
-//            }
-//        }
-//        restoreState = true
+        popUpTo(navigationDestination.route)
     }
+}
+
+@Composable
+fun NavHostController.currentScreen(): String? {
+    val navBackStackEntry by currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
 }

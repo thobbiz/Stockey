@@ -1,8 +1,10 @@
 package com.example.project_umbrella.ui.screens.HomeScreens
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import  co.yml.charts.common.model.Point
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,7 +29,7 @@ val interval = floatArrayOf(10f, 20f)
 
 @Composable
 fun LineChart(
-    modifier: Modifier = Modifier
+    color: Color
 ) {
     val steps = 6
     val pointsData = listOf(
@@ -63,12 +65,13 @@ fun LineChart(
                 Line(
                     dataPoints = pointsData,
                     LineStyle(
-                        width = 7f,
+                        width = 6f,
                         color = Color(0xff2e7ffa),
                         lineType = LineType.SmoothCurve(isDotted = false)
                     ),
                     IntersectionPoint(
-                        color = Color.Transparent
+                        color = Color.Transparent,
+                        radius = 0.dp
                     ),
                     SelectionHighlightPoint(Color.Transparent),
                     ShadowUnderLine(
@@ -84,7 +87,7 @@ fun LineChart(
                 )
             ),
         ),
-        backgroundColor = MaterialTheme.colorScheme.surface,
+        backgroundColor = color,
         xAxisData = xAxisData,
         yAxisData = yAxisData,
         gridLines = GridLines(
@@ -95,7 +98,8 @@ fun LineChart(
         )
     )
 
-    LineChart(modifier = Modifier
+    LineChart(
+        modifier = Modifier
         .fillMaxWidth()
         .height(300.dp),
         lineChartData = lineChartData

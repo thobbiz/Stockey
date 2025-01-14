@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,10 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.project_umbrella.R
 import com.example.project_umbrella.ui.navigation.NavigationDestination
 
@@ -38,27 +36,39 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(36.dp)
     ) {
-
-        ProductInAndOut()
-
-        Text(
-            text = "Revenue",
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color(0xffacbdc8),
-        )
-
+        HomeScreenTopAppBar()
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(70.dp),
+            modifier = Modifier.fillMaxHeight()
         ) {
-            Text(
-                text = "$27,003.98",
-                style = MaterialTheme.typography.displayMedium,
-                color = Color.Black,
-            )
+            ProductInAndOut()
 
-            LineChart()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Revenue",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.W900,
+                    color = Color(0xff494D5A),
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = "$27,003.98",
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+
+                    LineChart(MaterialTheme.colorScheme.primary)
+                }
+            }
         }
     }
 }
@@ -66,14 +76,14 @@ fun HomeScreen() {
 @Composable
 private fun ProductInAndOut() {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(30.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.2f)
+                .fillMaxHeight(0.22f)
                 .weight(1f),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xff046cdb))
@@ -81,32 +91,37 @@ private fun ProductInAndOut() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp)
+                    .padding(25.dp)
                     .background(Color.Transparent),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                 Icon(
-                    imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = stringResource(R.string.shopping_cart)
+                    imageVector = ImageVector.vectorResource(R.drawable.productin),
+                    contentDescription = stringResource(R.string.shopping_cart),
+                    tint = Color.Unspecified
                     )
-                Text(
-                    "3044",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Thin
-                )
-                Text(
-                    stringResource(R.string.product_in),
-                    color = Color(0xffe6eaed),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        "3027",
+                        color = Color.White,
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.Thin
+                    )
+                    Text(
+                        stringResource(R.string.product_in),
+                        color = Color(0xff80bfff),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.2f)
+                .fillMaxHeight(0.22f)
                 .weight(1f),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xff49a2e4))
@@ -114,26 +129,40 @@ private fun ProductInAndOut() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp)
+                    .padding(25.dp)
                     .background(Color.Transparent),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                 Icon(
-                    imageVector = Icons.Filled.Info,
+                    imageVector = ImageVector.vectorResource(R.drawable.productout),
+                    tint = Color.Unspecified,
                     contentDescription = stringResource(R.string.info)
                 )
-                Text(
-                    "3044",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Thin
-                )
-                Text(
-                    stringResource(R.string.product_out),
-                    color = Color(0xffe6eaed),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        "2698",
+                        color = Color.White,
+                        style = MaterialTheme.typography.displayMedium
+                    )
+                    Text(
+                        stringResource(R.string.product_out),
+                        color = Color(0xff96defd),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun HomeScreenTopAppBar() {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(text = "Dashboard", style = MaterialTheme.typography.displayLarge, fontWeight = FontWeight.Bold, color = Color.Black)
     }
 }

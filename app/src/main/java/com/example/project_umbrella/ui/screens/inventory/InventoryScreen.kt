@@ -63,7 +63,7 @@ fun InventoryScreen(
     viewModel: InventoryScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        val inventoryUiState by viewModel.inventoryUiState.collectAsState()
+    val inventoryUiState by viewModel.inventoryUiState.collectAsState()
     val totalProducts by viewModel.totalProducts.collectAsState()
     val totalStocks by viewModel.totalStockCount.collectAsState()
 
