@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -36,7 +37,7 @@ fun NavBar (
     navigateToGraphs: () -> Unit = {},
     navigateToSettings: () -> Unit = {}
 ) {
-    val nav_items = listOf(
+    val navItems = listOf(
     NavigationItem(label = "Home", int = R.drawable.home, iconClicked = Icons.Filled.Home, navigateTo = navigateToHome),
     NavigationItem(label = "Inventory", int = R.drawable.folder, iconClicked = Icons.Filled.AccountBox, navigateTo = navigateToInventory),
     NavigationItem(label = "Notifications", int = R.drawable.barchart, iconClicked = Icons.Filled.MailOutline, navigateTo = navigateToGraphs),
@@ -53,7 +54,7 @@ fun NavBar (
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
                 .fillMaxHeight(),
             shape = RoundedCornerShape(0.dp),
             colors = CardDefaults.cardColors(
@@ -68,12 +69,13 @@ fun NavBar (
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                nav_items.forEachIndexed { _, item ->
+                navItems.forEachIndexed { _, item ->
                     Icon(
                         imageVector = ImageVector.vectorResource(item.int),
-                        tint = Color(0xffc4c4c4),
+                        tint = if (currentScreen==item.label) Color(0xff0081f7) else Color(0xffc4c4c4),
                         contentDescription = item.label,
                         modifier = Modifier
+                            .size(35.dp)
                             .clickable {
                                 item.navigateTo()
                             }

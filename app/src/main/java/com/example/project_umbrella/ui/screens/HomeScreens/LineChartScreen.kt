@@ -1,10 +1,13 @@
 package com.example.project_umbrella.ui.screens.HomeScreens
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import  co.yml.charts.common.model.Point
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +29,8 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 
 val interval = floatArrayOf(10f, 20f)
+val daysOfWeek = listOf("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su")
+
 
 @Composable
 fun LineChart(
@@ -33,27 +38,33 @@ fun LineChart(
 ) {
     val steps = 6
     val pointsData = listOf(
-        Point(0f, 40f),
-        Point(1f, 50f),
-        Point(2f, 0f),
-        Point(3f, 60f),
-        Point(4f, 10f)
+        Point(0f, 30f),
+        Point(0.5f, 36f),
+        Point(1f, 33f),
+        Point(1.5f, 37f),
+        Point(2f, 39f),
+        Point(2.5f, 43f),
+        Point(3f, 41f),
+        Point(3.5f, 47f),
+        Point(4f, 53f),
     )
 
     val xAxisData = AxisData.Builder()
-        .axisStepSize(100.dp)
+        .axisStepSize(60.dp)
         .backgroundColor(Color.Transparent)
         .steps(pointsData.size - 1)
-        .labelData {""}
+        .labelData{i ->
+            daysOfWeek.getOrElse(i) {"$i"}
+        }
         .labelAndAxisLinePadding(0.dp)
         .axisLineColor(Color.Transparent)
-        .axisLabelColor(Color.Black)
+        .axisLabelColor(Color(0xff919191))
         .build()
 
     val yAxisData = AxisData.Builder()
         .steps(steps)
         .backgroundColor(Color.Transparent)
-        .labelAndAxisLinePadding(20.dp)
+        .labelAndAxisLinePadding(0.dp)
         .labelData { "" }
         .axisLineColor(Color.Transparent)
         .axisLabelColor(Color.Transparent)
@@ -66,7 +77,7 @@ fun LineChart(
                     dataPoints = pointsData,
                     LineStyle(
                         width = 6f,
-                        color = Color(0xff2e7ffa),
+                        color = Color(0xff0081f7),
                         lineType = LineType.SmoothCurve(isDotted = false)
                     ),
                     IntersectionPoint(
@@ -101,7 +112,7 @@ fun LineChart(
     LineChart(
         modifier = Modifier
         .fillMaxWidth()
-        .height(300.dp),
+        .height(350.dp),
         lineChartData = lineChartData
     )
 }

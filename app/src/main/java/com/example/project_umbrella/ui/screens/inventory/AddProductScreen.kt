@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -108,13 +110,13 @@ fun AddProductBody(
             onClick = onSaveClick,
             enabled = productUiState.isInfoValid,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff046cdb),
+                containerColor = Color(0xff0081f7),
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(9.dp),
-            modifier = Modifier.width(369.dp)
+            modifier = Modifier.fillMaxWidth().height(55.dp)
         ) {
-            Text(text = stringResource(R.string.save),  style = MaterialTheme.typography.bodySmall)
+            Text(text = stringResource(R.string.save),  style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -138,7 +140,7 @@ fun AddProductForm(
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xff046cdb),
+                focusedBorderColor = Color(0xff0081f7),
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -156,7 +158,7 @@ fun AddProductForm(
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xff046cdb),
+                focusedBorderColor = Color(0xff0081f7),
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -175,7 +177,7 @@ fun AddProductForm(
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xff046cdb),
+                focusedBorderColor = Color(0xff0081f7),
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -194,7 +196,7 @@ fun AddProductForm(
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xff046cdb),
+                focusedBorderColor = Color(0xff0081f7),
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -212,7 +214,7 @@ fun AddProductForm(
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xff046cdb),
+                focusedBorderColor = Color(0xff0081f7),
                 focusedContainerColor = MaterialTheme.colorScheme.background,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 disabledContainerColor = MaterialTheme.colorScheme.background,
@@ -236,7 +238,7 @@ fun AddProductTopAppBar(
     navigateUp: () -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(title, style =  MaterialTheme.typography.displaySmall) },
+        title = { Text(title, style =  MaterialTheme.typography.displayMedium, fontWeight = FontWeight.SemiBold) },
         modifier = modifier,
         scrollBehavior = scrollBehavior,
         navigationIcon = {

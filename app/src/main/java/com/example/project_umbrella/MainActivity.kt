@@ -47,6 +47,9 @@ fun InventoryApp() {
             .background(MaterialTheme.colorScheme.primary)
     ) {
         Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.primary),
             bottomBar = {
                 navController.currentScreen()?.let {
                     NavBar(
@@ -60,11 +63,8 @@ fun InventoryApp() {
                                 InventoryDestination
                             )
                         },
-                        navigateToSettings = {
-                        },
-                        navigateToGraphs =  {
-
-                        },
+                        navigateToSettings = {},
+                        navigateToGraphs =  {},
                         currentScreen = it
                     )
                 }

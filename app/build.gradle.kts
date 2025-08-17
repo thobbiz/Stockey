@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.project_umbrella"
@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.ui.text)
+    implementation(libs.androidx.foundation.layout)
 
 
     // Testing

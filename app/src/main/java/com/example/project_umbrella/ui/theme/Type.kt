@@ -9,50 +9,51 @@ import androidx.compose.ui.unit.sp
 import com.example.project_umbrella.R
 
 
-val Univers = FontFamily(
-    Font(R.font.universe_regular)
+val Poppins = FontFamily(
+    Font(R.font.poppins_regular),
+    Font(R.font.poppins_semibold, FontWeight.SemiBold),
+    Font(R.font.poppins_bold, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 20.sp,
     ),
 
     bodySmall = TextStyle(
-        fontFamily = Univers,
-        fontSize = 14.sp,
+        fontFamily = Poppins,
+        fontSize = 15.sp,
     ),
     bodyMedium = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 18.sp,
         fontWeight = FontWeight.Thin
     ),
     displayLarge = TextStyle(
-        fontFamily = Univers,
-        fontSize = 36.sp,
-        fontWeight = FontWeight.Bold
+        fontFamily = Poppins,
+        fontSize = 34.sp,
     ),
     displayMedium = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 24.sp
     ),
     displaySmall = TextStyle(
-        fontFamily = Univers,
-        fontSize = 20.sp
+        fontFamily = Poppins,
+        fontSize = 16.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 14.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 20.sp
     ),
 
     labelMedium = TextStyle(
-        fontFamily = Univers,
+        fontFamily = Poppins,
         fontSize = 17.sp,
         fontWeight = FontWeight.Thin
     )

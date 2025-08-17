@@ -1,5 +1,7 @@
 package com.example.project_umbrella.ui.screens.inventory
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,11 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,13 +24,13 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -38,7 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,10 +54,11 @@ import com.example.project_umbrella.ui.navigation.NavigationDestination
 import com.example.project_umbrella.ui.theme.ProjectumbrellaTheme
 
 object InventoryDestination: NavigationDestination {
-    override val route = "inventory"
+    override val route = "Inventory"
     override val titleRes = R.string.inventory
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryScreen(
@@ -80,7 +85,7 @@ fun InventoryScreen(
                 onClick = navigateToProductEntry,
                 shape = CircleShape,
                 modifier = Modifier.padding(20.dp),
-                containerColor = Color(0xff2e7ffa)
+                containerColor = Color(0xff0081f7)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -95,7 +100,13 @@ fun InventoryScreen(
             totalProducts = totalProducts,
             totalStocks = totalStocks,
             onProductClick = navigateToProductDetail,
-            modifier = Modifier.fillMaxSize().padding(40.dp),
+            modifier = Modifier.fillMaxSize()
+                .padding(
+                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+                    top = innerPadding.calculateTopPadding()
+                )
+                .background(color = MaterialTheme.colorScheme.primary),
             contentPadding = innerPadding
             )
     }
@@ -113,7 +124,7 @@ private fun InventoryBody(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .padding(horizontal = 25.dp)
+            .padding(horizontal = 16.dp)
     ) {
 
         if (productList.isEmpty()) {
@@ -121,37 +132,24 @@ private fun InventoryBody(
             Text(
                 text = stringResource(R.string.empty_inventory),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(contentPadding)
             )
         } else {
-
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.Absolute.SpaceBetween
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                TotalProducts(
-                    totalProducts = totalProducts,
-                )
-
-                TotalStocks(
-                    totalStocks = totalStocks
-                )
+                TotalProducts(totalProducts = totalProducts)
+                TotalStocks(totalStocks = totalStocks)
             }
-
-            Spacer(
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(10.dp)
-            )
-
             InventoryProductList(
                 productList = productList,
                 onProductClick = { onProductClick(it.id) },
                 contentPadding = contentPadding,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                modifier = Modifier.padding(horizontal = 0.dp)
             )
         }
     }
@@ -166,12 +164,12 @@ private fun InventoryProductList(
 ) {
 
     LazyColumn(
-        modifier = modifier.padding(),
+        modifier = modifier.padding().fillMaxWidth(),
         contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ){
         item {
-            Text(text = stringResource(R.string.products_list), style = MaterialTheme.typography.bodyMedium, color = Color(0xffacbdc8))
+            Text(text = stringResource(R.string.products_list), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
         }
         items(
             items = productList,
@@ -193,23 +191,17 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product) {
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(0.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(3.dp),
     ) {
-        Column(
-            modifier = modifier
-                .padding(15.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(3.dp)),
+                    .clip(RoundedCornerShape(3.dp))
+                    .padding(vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -222,7 +214,7 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product) {
                             shape = RoundedCornerShape(8.dp),
                             colors = CardDefaults.cardColors(containerColor = Color(0xfff9ded2))
                         ) {
-                            Text("Low Stock", color = Color(0xfff98048), style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
+                            Text("Low", color = Color(0xfff98048), style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
                         }
                     }
                 }
@@ -231,25 +223,23 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product) {
 
                 Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "More", tint = Color(0xff9c9c9c))
             }
-        }
     }
-
 }
 
 
 @Composable
 private fun TotalProducts(totalProducts: Int) {
     Column {
-        Text(text = stringResource(R.string.total_products), style = MaterialTheme.typography.bodyMedium, color = Color(0xffacbdc8))
-        Text(text = "$totalProducts", style = MaterialTheme.typography.displayLarge)
+        Text(text = stringResource(R.string.total_products), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
+        Text(text = "$totalProducts", style = MaterialTheme.typography.displayLarge, fontWeight = FontWeight.SemiBold)
     }
 }
 
 @Composable
 private fun TotalStocks(totalStocks: Int) {
     Column {
-        Text(text = stringResource(R.string.total_stocks), style = MaterialTheme.typography.bodyMedium, color = Color(0xffacbdc8))
-        Text(text = "$totalStocks", style = MaterialTheme.typography.displayLarge)
+        Text(text = stringResource(R.string.total_stocks), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
+        Text(text = "$totalStocks", style = MaterialTheme.typography.displayLarge, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -260,9 +250,12 @@ fun InventoryScreenTopAppBar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    CenterAlignedTopAppBar(
-        title = { Text(title, style = MaterialTheme.typography.displaySmall) },
-        modifier = modifier,
+    TopAppBar(
+        title = { Text(title, style = MaterialTheme.typography.displayMedium, fontWeight = FontWeight.SemiBold) },
+        modifier = modifier.fillMaxWidth(),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
         scrollBehavior = scrollBehavior,
     )
 }
@@ -277,7 +270,6 @@ var fake: List<Product> = listOf(
 @Composable
 fun InventoryBodyPreview() {
     ProjectumbrellaTheme {
-
         InventoryBody(productList = fake, onProductClick = {}, totalProducts = 23, totalStocks = 90)
     }
 }
