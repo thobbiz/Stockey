@@ -19,21 +19,20 @@ val Poppins = FontFamily(
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Poppins,
-        fontSize = 20.sp,
+        fontSize = 17.sp,
     ),
 
     bodySmall = TextStyle(
         fontFamily = Poppins,
-        fontSize = 15.sp,
+        fontSize = 14.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = Poppins,
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Thin
+        fontSize = 16.sp
     ),
     displayLarge = TextStyle(
         fontFamily = Poppins,
-        fontSize = 34.sp,
+        fontSize = 32.sp,
     ),
     displayMedium = TextStyle(
         fontFamily = Poppins,
@@ -41,7 +40,7 @@ val Typography = Typography(
     ),
     displaySmall = TextStyle(
         fontFamily = Poppins,
-        fontSize = 16.sp
+        fontSize = 20.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Poppins,

@@ -27,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,9 +40,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,18 +76,20 @@ fun InventoryScreen(
     val totalStocks by viewModel.totalStockCount.collectAsState()
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .fillMaxSize(),
        topBar = {
            InventoryScreenTopAppBar(
-               title = stringResource(InventoryDestination.titleRes),
-               scrollBehavior = scrollBehavior
+               title = stringResource(R.string.inventory)
            )
        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToProductEntry,
                 shape = CircleShape,
-                modifier = Modifier.padding(20.dp),
+                modifier = Modifier.padding(16.dp),
                 containerColor = Color(0xff0081f7)
             ) {
                 Icon(
@@ -106,7 +111,7 @@ fun InventoryScreen(
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
                 )
-                .background(color = MaterialTheme.colorScheme.primary),
+                .background(color = MaterialTheme.colorScheme.background),
             contentPadding = innerPadding
             )
     }
@@ -166,7 +171,7 @@ private fun InventoryProductList(
     LazyColumn(
         modifier = modifier.padding().fillMaxWidth(),
         contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(0.dp)
     ){
         item {
             Text(text = stringResource(R.string.products_list), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
@@ -179,15 +184,15 @@ private fun InventoryProductList(
             InventoryItem(
                 product = product,
                 modifier = Modifier
-                    .padding(vertical = 5.dp)
-                    .clickable { onProductClick(product) }
+                    .padding(vertical = 0.dp),
+                onProductClick = { onProductClick(product) }
             )
         }
     }
 }
 
 @Composable
-private fun InventoryItem( modifier : Modifier = Modifier, product: Product) {
+private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onProductClick: () -> Unit = {}) {
 
     Card(
         modifier = modifier
@@ -221,7 +226,17 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product) {
 
                 Spacer(Modifier.weight(1f))
 
-                Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "More", tint = Color(0xff9c9c9c))
+                IconButton(
+                    onClick = onProductClick,
+                    modifier = Modifier.padding(0.dp)
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(0.dp),
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "More",
+                        tint = Color(0xff9c9c9c)
+                    )
+                }
             }
     }
 }
@@ -246,18 +261,34 @@ private fun TotalStocks(totalStocks: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryScreenTopAppBar(
-    title: String,
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    title:String
 ) {
-    TopAppBar(
-        title = { Text(title, style = MaterialTheme.typography.displayMedium, fontWeight = FontWeight.SemiBold) },
-        modifier = modifier.fillMaxWidth(),
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
-        scrollBehavior = scrollBehavior,
-    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.displayMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
+
+        IconButton(
+            modifier = Modifier.padding(0.dp),
+            onClick = {}
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.search),
+                contentDescription = null
+            )
+        }
+    }
+
 }
 
 var fake: List<Product> = listOf(

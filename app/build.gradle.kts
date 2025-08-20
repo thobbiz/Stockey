@@ -10,6 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.example.project_umbrella"
         minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

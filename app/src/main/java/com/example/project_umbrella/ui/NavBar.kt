@@ -39,7 +39,7 @@ fun NavBar (
 ) {
     val navItems = listOf(
     NavigationItem(label = "Home", int = R.drawable.home, iconClicked = Icons.Filled.Home, navigateTo = navigateToHome),
-    NavigationItem(label = "Inventory", int = R.drawable.folder, iconClicked = Icons.Filled.AccountBox, navigateTo = navigateToInventory),
+    NavigationItem(label = "Inventory", int = R.drawable.inventory, iconClicked = Icons.Filled.AccountBox, navigateTo = navigateToInventory),
     NavigationItem(label = "Notifications", int = R.drawable.barchart, iconClicked = Icons.Filled.MailOutline, navigateTo = navigateToGraphs),
     NavigationItem(label = "Settings", int = R.drawable.settings, iconClicked = Icons.Filled.Settings, navigateTo = navigateToSettings)
 )
@@ -48,7 +48,7 @@ fun NavBar (
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.07f)
-            .background(MaterialTheme.colorScheme.primary),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.BottomCenter
     ) {
         Card(
@@ -59,7 +59,7 @@ fun NavBar (
             shape = RoundedCornerShape(0.dp),
             colors = CardDefaults.cardColors(
                 contentColor = Color.Unspecified,
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.background
             )
         ) {
             Row(

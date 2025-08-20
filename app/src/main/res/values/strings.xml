@@ -8,7 +8,7 @@
     <string name="edit_product">Edit Product</string>
     <string name="empty_inventory">"Yeah, nothing is here..."</string>
     <string name="in_store">%d in Store</string>
-    <string name="inventory">Inventory</string>
+    <string name="inventory">Products</string>
     <string name="add_product">Add Product</string>
     <string name="cost_price">Cost Price</string>
     <string name="selling_price">Selling Price</string>

@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,6 +66,7 @@ fun ProductDetailsScreen(
     val coroutineScope = rememberCoroutineScope()
     
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             InventoryScreenTopAppBar(title = stringResource(id = R.string.product_details))
         }
@@ -95,8 +99,8 @@ private fun ProductDetailsBody(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.padding(0.dp),
+        verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
         
@@ -104,24 +108,38 @@ private fun ProductDetailsBody(
             product = productDetailsUiState.productInfo.toProduct(),
             modifier = Modifier.fillMaxWidth()
         )
-        Button(
-            onClick = onEditProduct,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff046cdb),
-                contentColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small,
-            enabled = true
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(stringResource(R.string.edit))
-        }
-        OutlinedButton(
-            onClick = { deleteConfirmationRequired = true },
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.delete))
+            Button(
+                onClick = onEditProduct,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff0081f7),
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(45.dp)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(5.dp),
+                enabled = true
+            ) {
+                Text(stringResource(R.string.edit), style = MaterialTheme.typography.bodyMedium)
+            }
+            OutlinedButton(
+                onClick = { deleteConfirmationRequired = true },
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(45.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.delete),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
         if(deleteConfirmationRequired) {
             DeleteConfirmationDialog(
@@ -149,8 +167,7 @@ fun ProductDetails(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(60.dp)
         ) {
            ProductDetailsRow(
@@ -194,7 +211,7 @@ private fun ProductDetailsRow(
         Row(modifier = modifier) {
             Text(text = stringResource(labelResId), style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = productDetail, style = MaterialTheme.typography.bodyMedium)
+            Text(text = productDetail, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
         }
 }
 
@@ -207,15 +224,16 @@ private fun DeleteConfirmationDialog(
     AlertDialog(onDismissRequest = { /* Do nothing */ },
         title = { Text(stringResource(R.string.attention)) },
         text = { Text(stringResource(R.string.delete_question)) },
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier,
         dismissButton = {
             TextButton(onClick = onDeleteCancel) {
-                Text(stringResource(R.string.no))
+                Text(stringResource(R.string.no), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
             }
         },
         confirmButton = {
             TextButton(onClick = onDeleteConfirm) {
-                Text(stringResource(R.string.yes))
+                Text(stringResource(R.string.yes), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
             }
         }
     )

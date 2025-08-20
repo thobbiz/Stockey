@@ -46,7 +46,7 @@ fun TimeRangeSelector() {
                 Text(
                     text = label,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (selectedIndex == index) Color.White else Color.Black,
+                    color = if (selectedIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.SemiBold,
                 )
             }

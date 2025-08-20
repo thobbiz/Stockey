@@ -57,13 +57,13 @@ fun ProductInAndOut() {
                 ) {
                     Text(
                         "3027",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.displayMedium,
-                        fontWeight = FontWeight.Thin
+                        fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         stringResource(R.string.product_in),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -95,12 +95,13 @@ fun ProductInAndOut() {
                 ) {
                     Text(
                         "2698",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
                         style = MaterialTheme.typography.displayMedium
                     )
                     Text(
                         stringResource(R.string.product_out),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
