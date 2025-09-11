@@ -1,0 +1,55 @@
+CREATE TABLE "products" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "cost_price" bigint NOT NULL,
+  "selling_price" bigint NOT NULL,
+  "quantity" bigint NOT NULL,
+  "unit" varchar NOT NULL,
+  "description" varchar,
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+);
+
+CREATE TABLE "entries" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "product_id" bigint NOT NULL,
+  "quantity" bigint NOT NULL,
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+);
+
+CREATE TABLE "orders" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "customer_id" bigint,
+  "total_amount" bigint NOT NULL,
+  "comment" varchar,
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+);
+
+CREATE TABLE "order_products" (
+  "order_id" bigint NOT NULL,
+  "product_id" bigint NOT NULL,
+  "price" bigint NOT NULL,
+  "quantity" bigint NOT NULL,
+  PRIMARY KEY ("order_id", "product_id")
+);
+
+CREATE TABLE "customers" (
+  "id" BIGSERIAL PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "phone" varchar
+);
+
+CREATE INDEX ON "products" ("name");
+
+CREATE INDEX ON "entries" ("product_id");
+
+CREATE INDEX ON "orders" ("customer_id");
+
+CREATE INDEX ON "orders" ("created_at");
+
+ALTER TABLE "entries" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("customer_id") REFERENCES "customers" ("id");
+
+ALTER TABLE "order_products" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+
+ALTER TABLE "order_products" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
