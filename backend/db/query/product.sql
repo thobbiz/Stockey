@@ -27,5 +27,17 @@ ORDER BY id LIMIT $1 OFFSET $2;
 -- name: AddQuantity :one
 UPDATE products SET quantity = quantity + sqlc.arg(amount) WHERE id = sqlc.arg(id) RETURNING *;
 
+-- name: UpdateSellingPrice :one
+UPDATE products 
+SET selling_price = sqlc.arg(selling_price)
+WHERE id = sqlc.arg(id)
+RETURNING *;
+
+-- name: UpdateCostPrice :one
+UPDATE products 
+SET cost_price = sqlc.arg(cost_price)
+WHERE id = sqlc.arg(id)
+RETURNING *;
+
 -- name: DeleteProduct :exec
 DELETE FROM products WHERE id = $1;

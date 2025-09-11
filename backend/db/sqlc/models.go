@@ -10,9 +10,10 @@ import (
 )
 
 type Customer struct {
-	ID    int64          `json:"id"`
-	Name  string         `json:"name"`
-	Phone sql.NullString `json:"phone"`
+	ID        int64         `json:"id"`
+	Name      string        `json:"name"`
+	Phone     sql.NullInt64 `json:"phone"`
+	CreatedAt time.Time     `json:"created_at"`
 }
 
 type Entry struct {

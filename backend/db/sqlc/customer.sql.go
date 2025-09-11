@@ -17,18 +17,23 @@ INSERT INTO customers (
 ) VALUES (
   $1, $2
 )
-RETURNING id, name, phone
+RETURNING id, name, phone, created_at
 `
 
 type CreateCustomerParams struct {
-	Name  string         `json:"name"`
-	Phone sql.NullString `json:"phone"`
+	Name  string        `json:"name"`
+	Phone sql.NullInt64 `json:"phone"`
 }
 
 func (q *Queries) CreateCustomer(ctx context.Context, arg CreateCustomerParams) (Customer, error) {
 	row := q.db.QueryRowContext(ctx, createCustomer, arg.Name, arg.Phone)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Name, &i.Phone)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Phone,
+		&i.CreatedAt,
+	)
 	return i, err
 }
 
@@ -42,19 +47,24 @@ func (q *Queries) DeleteCustomer(ctx context.Context, id int64) error {
 }
 
 const getCustomer = `-- name: GetCustomer :one
-SELECT id, name, phone FROM customers
+SELECT id, name, phone, created_at FROM customers
 WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetCustomer(ctx context.Context, id int64) (Customer, error) {
 	row := q.db.QueryRowContext(ctx, getCustomer, id)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Name, &i.Phone)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Phone,
+		&i.CreatedAt,
+	)
 	return i, err
 }
 
 const listCustomers = `-- name: ListCustomers :many
-SELECT id, name, phone FROM customers
+SELECT id, name, phone, created_at FROM customers
 ORDER BY id LIMIT $1 OFFSET $2
 `
 
@@ -72,7 +82,12 @@ func (q *Queries) ListCustomers(ctx context.Context, arg ListCustomersParams) ([
 	items := []Customer{}
 	for rows.Next() {
 		var i Customer
-		if err := rows.Scan(&i.ID, &i.Name, &i.Phone); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Phone,
+			&i.CreatedAt,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -90,17 +105,22 @@ const updateCustomer = `-- name: UpdateCustomer :one
 UPDATE customers
 SET phone = $2
 WHERE id = $1
-RETURNING id, name, phone
+RETURNING id, name, phone, created_at
 `
 
 type UpdateCustomerParams struct {
-	ID    int64          `json:"id"`
-	Phone sql.NullString `json:"phone"`
+	ID    int64         `json:"id"`
+	Phone sql.NullInt64 `json:"phone"`
 }
 
 func (q *Queries) UpdateCustomer(ctx context.Context, arg UpdateCustomerParams) (Customer, error) {
 	row := q.db.QueryRowContext(ctx, updateCustomer, arg.ID, arg.Phone)
 	var i Customer
-	err := row.Scan(&i.ID, &i.Name, &i.Phone)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Phone,
+		&i.CreatedAt,
+	)
 	return i, err
 }

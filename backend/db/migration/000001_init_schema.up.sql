@@ -35,7 +35,8 @@ CREATE TABLE "order_products" (
 CREATE TABLE "customers" (
   "id" BIGSERIAL PRIMARY KEY,
   "name" varchar NOT NULL,
-  "phone" varchar
+  "phone" bigint,
+  "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
 CREATE INDEX ON "products" ("name");
@@ -45,6 +46,8 @@ CREATE INDEX ON "entries" ("product_id");
 CREATE INDEX ON "orders" ("customer_id");
 
 CREATE INDEX ON "orders" ("created_at");
+
+CREATE INDEX ON "customers" ("name");
 
 ALTER TABLE "entries" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
 

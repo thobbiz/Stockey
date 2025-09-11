@@ -174,3 +174,59 @@ func (q *Queries) ListProducts(ctx context.Context, arg ListProductsParams) ([]P
 	}
 	return items, nil
 }
+
+const updateCostPrice = `-- name: UpdateCostPrice :one
+UPDATE products 
+SET cost_price = $1
+WHERE id = $2
+RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+`
+
+type UpdateCostPriceParams struct {
+	CostPrice int64 `json:"cost_price"`
+	ID        int64 `json:"id"`
+}
+
+func (q *Queries) UpdateCostPrice(ctx context.Context, arg UpdateCostPriceParams) (Product, error) {
+	row := q.db.QueryRowContext(ctx, updateCostPrice, arg.CostPrice, arg.ID)
+	var i Product
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.CostPrice,
+		&i.SellingPrice,
+		&i.Quantity,
+		&i.Unit,
+		&i.Description,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updateSellingPrice = `-- name: UpdateSellingPrice :one
+UPDATE products 
+SET selling_price = $1
+WHERE id = $2
+RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+`
+
+type UpdateSellingPriceParams struct {
+	SellingPrice int64 `json:"selling_price"`
+	ID           int64 `json:"id"`
+}
+
+func (q *Queries) UpdateSellingPrice(ctx context.Context, arg UpdateSellingPriceParams) (Product, error) {
+	row := q.db.QueryRowContext(ctx, updateSellingPrice, arg.SellingPrice, arg.ID)
+	var i Product
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.CostPrice,
+		&i.SellingPrice,
+		&i.Quantity,
+		&i.Unit,
+		&i.Description,
+		&i.CreatedAt,
+	)
+	return i, err
+}
