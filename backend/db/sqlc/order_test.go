@@ -24,11 +24,15 @@ func createRandomOrder(t *testing.T) Order {
 	}
 
 	order, err := testQueries.CreateOrder(context.Background(), arg)
+	order.OrderStatus = OrderStatusCompleted
+	order.PaymentMethod = PaymentMethodBankTransfer
 	require.NoError(t, err)
 	require.NotEmpty(t, order)
 
 	require.Equal(t, arg.CustomerID, order.CustomerID)
 	require.Equal(t, arg.TotalAmount, order.TotalAmount)
+	require.NotEqual(t, order.OrderStatus, OrderStatusPending)
+	require.NotEqual(t, order.PaymentMethod, PaymentMethodNotSelected)
 
 	require.NotZero(t, order.ID)
 	require.NotZero(t, order.CreatedAt)

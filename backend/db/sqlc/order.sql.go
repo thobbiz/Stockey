@@ -18,7 +18,7 @@ INSERT INTO orders (
 ) VALUES (
   $1, $2, $3
 )
-RETURNING id, customer_id, total_amount, comment, created_at
+RETURNING id, customer_id, total_amount, order_status, payment_method, comment, created_at
 `
 
 type CreateOrderParams struct {
@@ -34,6 +34,8 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 		&i.ID,
 		&i.CustomerID,
 		&i.TotalAmount,
+		&i.OrderStatus,
+		&i.PaymentMethod,
 		&i.Comment,
 		&i.CreatedAt,
 	)
@@ -50,7 +52,7 @@ func (q *Queries) DeleteOrder(ctx context.Context, id int64) error {
 }
 
 const getOrder = `-- name: GetOrder :one
-SELECT id, customer_id, total_amount, comment, created_at FROM orders
+SELECT id, customer_id, total_amount, order_status, payment_method, comment, created_at FROM orders
 WHERE id = $1 LIMIT 1
 `
 
@@ -61,6 +63,8 @@ func (q *Queries) GetOrder(ctx context.Context, id int64) (Order, error) {
 		&i.ID,
 		&i.CustomerID,
 		&i.TotalAmount,
+		&i.OrderStatus,
+		&i.PaymentMethod,
 		&i.Comment,
 		&i.CreatedAt,
 	)
@@ -68,7 +72,7 @@ func (q *Queries) GetOrder(ctx context.Context, id int64) (Order, error) {
 }
 
 const listOrders = `-- name: ListOrders :many
-SELECT id, customer_id, total_amount, comment, created_at FROM orders
+SELECT id, customer_id, total_amount, order_status, payment_method, comment, created_at FROM orders
 ORDER BY id LIMIT $1 OFFSET $2
 `
 
@@ -90,6 +94,8 @@ func (q *Queries) ListOrders(ctx context.Context, arg ListOrdersParams) ([]Order
 			&i.ID,
 			&i.CustomerID,
 			&i.TotalAmount,
+			&i.OrderStatus,
+			&i.PaymentMethod,
 			&i.Comment,
 			&i.CreatedAt,
 		); err != nil {

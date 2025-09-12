@@ -6,8 +6,98 @@ package db
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"fmt"
 	"time"
 )
+
+type OrderStatus string
+
+const (
+	OrderStatusPending   OrderStatus = "pending"
+	OrderStatusCompleted OrderStatus = "completed"
+	OrderStatusCancelled OrderStatus = "cancelled"
+)
+
+func (e *OrderStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = OrderStatus(s)
+	case string:
+		*e = OrderStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for OrderStatus: %T", src)
+	}
+	return nil
+}
+
+type NullOrderStatus struct {
+	OrderStatus OrderStatus `json:"order_status"`
+	Valid       bool        `json:"valid"` // Valid is true if OrderStatus is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullOrderStatus) Scan(value interface{}) error {
+	if value == nil {
+		ns.OrderStatus, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.OrderStatus.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullOrderStatus) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.OrderStatus), nil
+}
+
+type PaymentMethod string
+
+const (
+	PaymentMethodCash         PaymentMethod = "cash"
+	PaymentMethodBankTransfer PaymentMethod = "bank_transfer"
+	PaymentMethodDebitCard    PaymentMethod = "debit_card"
+	PaymentMethodDebt         PaymentMethod = "debt"
+	PaymentMethodNotSelected  PaymentMethod = "not_selected"
+)
+
+func (e *PaymentMethod) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = PaymentMethod(s)
+	case string:
+		*e = PaymentMethod(s)
+	default:
+		return fmt.Errorf("unsupported scan type for PaymentMethod: %T", src)
+	}
+	return nil
+}
+
+type NullPaymentMethod struct {
+	PaymentMethod PaymentMethod `json:"payment_method"`
+	Valid         bool          `json:"valid"` // Valid is true if PaymentMethod is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullPaymentMethod) Scan(value interface{}) error {
+	if value == nil {
+		ns.PaymentMethod, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.PaymentMethod.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullPaymentMethod) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.PaymentMethod), nil
+}
 
 type Customer struct {
 	ID        int64         `json:"id"`
@@ -24,11 +114,13 @@ type Entry struct {
 }
 
 type Order struct {
-	ID          int64          `json:"id"`
-	CustomerID  sql.NullInt64  `json:"customer_id"`
-	TotalAmount int64          `json:"total_amount"`
-	Comment     sql.NullString `json:"comment"`
-	CreatedAt   time.Time      `json:"created_at"`
+	ID            int64          `json:"id"`
+	CustomerID    sql.NullInt64  `json:"customer_id"`
+	TotalAmount   int64          `json:"total_amount"`
+	OrderStatus   OrderStatus    `json:"order_status"`
+	PaymentMethod PaymentMethod  `json:"payment_method"`
+	Comment       sql.NullString `json:"comment"`
+	CreatedAt     time.Time      `json:"created_at"`
 }
 
 type OrderProduct struct {
