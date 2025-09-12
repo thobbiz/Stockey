@@ -111,3 +111,57 @@ func (q *Queries) ListOrders(ctx context.Context, arg ListOrdersParams) ([]Order
 	}
 	return items, nil
 }
+
+const updateOrderStatus = `-- name: UpdateOrderStatus :one
+UPDATE orders 
+SET order_status = $1
+WHERE id = $2
+RETURNING id, customer_id, total_amount, order_status, payment_method, comment, created_at
+`
+
+type UpdateOrderStatusParams struct {
+	OrderStatus OrderStatus `json:"order_status"`
+	ID          int64       `json:"id"`
+}
+
+func (q *Queries) UpdateOrderStatus(ctx context.Context, arg UpdateOrderStatusParams) (Order, error) {
+	row := q.db.QueryRowContext(ctx, updateOrderStatus, arg.OrderStatus, arg.ID)
+	var i Order
+	err := row.Scan(
+		&i.ID,
+		&i.CustomerID,
+		&i.TotalAmount,
+		&i.OrderStatus,
+		&i.PaymentMethod,
+		&i.Comment,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const updatePaymentMethod = `-- name: UpdatePaymentMethod :one
+UPDATE orders 
+SET payment_method = $1
+WHERE id = $2
+RETURNING id, customer_id, total_amount, order_status, payment_method, comment, created_at
+`
+
+type UpdatePaymentMethodParams struct {
+	PaymentMethod PaymentMethod `json:"payment_method"`
+	ID            int64         `json:"id"`
+}
+
+func (q *Queries) UpdatePaymentMethod(ctx context.Context, arg UpdatePaymentMethodParams) (Order, error) {
+	row := q.db.QueryRowContext(ctx, updatePaymentMethod, arg.PaymentMethod, arg.ID)
+	var i Order
+	err := row.Scan(
+		&i.ID,
+		&i.CustomerID,
+		&i.TotalAmount,
+		&i.OrderStatus,
+		&i.PaymentMethod,
+		&i.Comment,
+		&i.CreatedAt,
+	)
+	return i, err
+}

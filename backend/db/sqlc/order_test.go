@@ -24,15 +24,13 @@ func createRandomOrder(t *testing.T) Order {
 	}
 
 	order, err := testQueries.CreateOrder(context.Background(), arg)
-	order.OrderStatus = OrderStatusCompleted
-	order.PaymentMethod = PaymentMethodBankTransfer
 	require.NoError(t, err)
 	require.NotEmpty(t, order)
 
 	require.Equal(t, arg.CustomerID, order.CustomerID)
 	require.Equal(t, arg.TotalAmount, order.TotalAmount)
-	require.NotEqual(t, order.OrderStatus, OrderStatusPending)
-	require.NotEqual(t, order.PaymentMethod, PaymentMethodNotSelected)
+	require.Equal(t, order.OrderStatus, OrderStatusPending)
+	require.Equal(t, order.PaymentMethod, PaymentMethodNotSelected)
 
 	require.NotZero(t, order.ID)
 	require.NotZero(t, order.CreatedAt)
@@ -54,6 +52,8 @@ func TestGetOrder(t *testing.T) {
 	require.Equal(t, order1.ID, order2.ID)
 	require.Equal(t, order1.CustomerID, order2.CustomerID)
 	require.Equal(t, order1.TotalAmount, order2.TotalAmount)
+	require.Equal(t, order1.OrderStatus, order2.OrderStatus)
+	require.Equal(t, order1.PaymentMethod, order2.PaymentMethod)
 	require.Equal(t, order1.Comment, order2.Comment)
 	require.WithinDuration(t, order1.CreatedAt, order2.CreatedAt, time.Second)
 }
@@ -67,6 +67,38 @@ func TestDeleteOrder(t *testing.T) {
 	require.Error(t, err)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, order2)
+}
+
+func TestUpdateOrder(t *testing.T) {
+	order1 := createRandomOrder(t)
+	argStatus := UpdateOrderStatusParams{
+		ID:          order1.ID,
+		OrderStatus: OrderStatusCompleted,
+	}
+	order2, err := testQueries.UpdateOrderStatus(context.Background(), argStatus)
+	require.NoError(t, err)
+	require.NotEmpty(t, order2)
+
+	require.Equal(t, order1.ID, order2.ID)
+	require.Equal(t, order1.CustomerID, order2.CustomerID)
+	require.Equal(t, order1.TotalAmount, order2.TotalAmount)
+	require.Equal(t, argStatus.OrderStatus, order2.OrderStatus)
+	require.NotEqual(t, order1.OrderStatus, order2.OrderStatus)
+
+	argPayment := UpdatePaymentMethodParams{
+		ID:            order1.ID,
+		PaymentMethod: PaymentMethodBankTransfer,
+	}
+	order3, err := testQueries.UpdatePaymentMethod(context.Background(), argPayment)
+	require.NoError(t, err)
+	require.NotEmpty(t, order3)
+
+	require.Equal(t, order2.ID, order3.ID)
+	require.Equal(t, order1.CustomerID, order2.CustomerID)
+	require.Equal(t, order1.TotalAmount, order3.TotalAmount)
+	require.Equal(t, order2.OrderStatus, order3.OrderStatus)
+	require.Equal(t, argPayment.PaymentMethod, order3.PaymentMethod)
+	require.WithinDuration(t, order2.CreatedAt, order3.CreatedAt, time.Second)
 }
 
 func TestListOrders(t *testing.T) {
