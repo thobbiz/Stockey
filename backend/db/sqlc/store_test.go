@@ -1,0 +1,142 @@
+package db
+
+import (
+	"context"
+	"database/sql"
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
+
+func TestOrderTx(t *testing.T) {
+	store := NewStore(testDB)
+	customer := createRandomCustomer(t)
+	product1 := createRandomProduct(t)
+	product2 := createRandomProduct(t)
+
+	orderProductInput := []CreateOrderProductInput{
+		{
+			ProductID: product1.ID,
+			Price:     product1.SellingPrice,
+			Quantity:  2,
+		},
+
+		{
+			ProductID: product2.ID,
+			Price:     product1.SellingPrice,
+			Quantity:  3,
+		},
+	}
+
+	arg := OrderTxParams{
+		CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+		PaymentMethod: PaymentMethodBankTransfer,
+		OrderProducts: orderProductInput,
+		Comment:       sql.NullString{String: "test Order", Valid: true},
+	}
+
+	result, err := store.OrderTx(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+
+	require.NotZero(t, result.Order.ID)
+	require.Equal(t, customer.ID, result.Order.CustomerID.Int64)
+
+	require.Len(t, result.OrderProducts, 2)
+	require.Equal(t, result.Order.ID, result.OrderProducts[0].OrderID)
+	require.Equal(t, result.Order.ID, result.OrderProducts[1].OrderID)
+
+	require.Len(t, result.Entry, 2)
+	require.Equal(t, int64(-2), result.Entry[0].Quantity)
+	require.Equal(t, int64(-3), result.Entry[1].Quantity)
+
+	updatedProduct1, err := store.GetProduct(context.Background(), product1.ID)
+	require.NoError(t, err)
+	require.Equal(t, updatedProduct1.Quantity, product1.Quantity-2)
+
+	updatedProduct2, err := store.GetProduct(context.Background(), product2.ID)
+	require.NoError(t, err)
+	require.Equal(t, updatedProduct2.Quantity, product2.Quantity-3)
+}
+
+func TestOrderTxConcurrent(t *testing.T) {
+	store := NewStore(testDB)
+	amount := int64(2)
+
+	customer := createRandomCustomer(t)
+	product, err := store.CreateProduct(context.Background(), CreateProductParams{
+		Name:         "Limited Product",
+		CostPrice:    950,
+		SellingPrice: 1000,
+		Quantity:     10,
+		Unit:         "bags",
+		Description:  sql.NullString{String: "why", Valid: true},
+	})
+	require.NoError(t, err)
+
+	orderProductInput := []CreateOrderProductInput{
+		{
+			ProductID: product.ID,
+			Price:     product.SellingPrice,
+			Quantity:  int64(amount),
+		},
+	}
+
+	n := 5
+	errs := make(chan error)
+	results := make(chan OrderTxResult)
+
+	for i := 0; i < n; i++ {
+		go func() {
+			arg := OrderTxParams{
+				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+				PaymentMethod: PaymentMethodBankTransfer,
+				OrderProducts: orderProductInput,
+				Comment:       sql.NullString{String: "test Order", Valid: true},
+			}
+
+			result, err := store.OrderTx(context.Background(), arg)
+			errs <- err
+			results <- result
+		}()
+	}
+
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+		result := <-results
+		require.NotEmpty(t, result)
+
+		order := result.Order
+		require.NotEmpty(t, order)
+		require.Equal(t, order.CustomerID.Int64, customer.ID)
+		require.NotZero(t, order.CreatedAt)
+		require.NotZero(t, order.ID)
+
+		_, err = store.GetOrder(context.Background(), order.ID)
+		require.NoError(t, err)
+
+		entries := result.Entry
+		for _, entry := range entries {
+			require.NotEmpty(t, entry)
+			require.NotZero(t, entry.CreatedAt)
+			require.NotZero(t, entry.ID)
+			require.Equal(t, entry.ProductID, product.ID)
+			require.Equal(t, entry.Quantity, -amount)
+		}
+
+		orderProducts := result.OrderProducts
+		for _, orderProduct := range orderProducts {
+			require.NotEmpty(t, orderProduct)
+			require.Equal(t, orderProduct.Price, product.SellingPrice)
+			require.NotZero(t, orderProduct.OrderID, order.ID)
+			require.Equal(t, orderProduct.ProductID, product.ID)
+		}
+	}
+
+	// Verify final product quantity
+	finalProduct, err := store.GetProduct(context.Background(), product.ID)
+	require.NoError(t, err)
+	require.Equal(t, int64(0), finalProduct.Quantity) // 7 - (3*3) = 1
+}
