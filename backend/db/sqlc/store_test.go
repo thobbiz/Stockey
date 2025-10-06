@@ -7,13 +7,43 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/thobbiz/Stockey/utilities"
 )
 
 func TestOrderTx(t *testing.T) {
 	store := NewStore(testDB)
 	customer := createRandomCustomer(t)
-	product1 := createRandomProduct(t)
-	product2 := createRandomProduct(t)
+
+	product1, err := store.CreateProduct(
+		context.Background(),
+		CreateProductParams{
+			Name:         utilities.RandomName(),
+			CostPrice:    int64(1000),
+			SellingPrice: int64(1500),
+			Quantity:     50,
+			Unit:         utilities.RandomString(6),
+		},
+	)
+	require.NoError(t, err)
+	require.NotEmpty(t, product1)
+	require.NotZero(t, product1.ID)
+	require.NotZero(t, product1.CreatedAt)
+
+	product2, err := store.CreateProduct(
+		context.Background(),
+		CreateProductParams{
+			Name:         utilities.RandomName(),
+			CostPrice:    int64(1000),
+			SellingPrice: int64(1500),
+			Quantity:     50,
+			Unit:         utilities.RandomString(6),
+		},
+	)
+	require.NoError(t, err)
+	require.NotEmpty(t, product2)
+
+	require.NotZero(t, product2.ID)
+	require.NotZero(t, product2.CreatedAt)
 
 	orderInput := []CreateOrderInput{
 		{
