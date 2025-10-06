@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,7 +15,7 @@ func TestOrderTx(t *testing.T) {
 	product1 := createRandomProduct(t)
 	product2 := createRandomProduct(t)
 
-	orderProductInput := []CreateOrderProductInput{
+	orderInput := []CreateOrderInput{
 		{
 			ProductID: product1.ID,
 			Price:     product1.SellingPrice,
@@ -31,7 +32,7 @@ func TestOrderTx(t *testing.T) {
 	arg := OrderTxParams{
 		CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
 		PaymentMethod: PaymentMethodBankTransfer,
-		OrderProducts: orderProductInput,
+		OrderInput:    orderInput,
 		Comment:       sql.NullString{String: "test Order", Valid: true},
 	}
 
@@ -74,7 +75,7 @@ func TestOrderTxConcurrent(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	orderProductInput := []CreateOrderProductInput{
+	orderInput := []CreateOrderInput{
 		{
 			ProductID: product.ID,
 			Price:     product.SellingPrice,
@@ -91,7 +92,7 @@ func TestOrderTxConcurrent(t *testing.T) {
 			arg := OrderTxParams{
 				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
 				PaymentMethod: PaymentMethodBankTransfer,
-				OrderProducts: orderProductInput,
+				OrderInput:    orderInput,
 				Comment:       sql.NullString{String: "test Order", Valid: true},
 			}
 
@@ -164,7 +165,7 @@ func TestOrderTxDeadlock(t *testing.T) {
 		Description:  sql.NullString{String: "why", Valid: true},
 	})
 
-	orderProductInput1 := []CreateOrderProductInput{
+	orderInput1 := []CreateOrderInput{
 		{
 			ProductID: productA.ID,
 			Price:     productA.SellingPrice,
@@ -178,7 +179,7 @@ func TestOrderTxDeadlock(t *testing.T) {
 		},
 	}
 
-	orderProductInput2 := []CreateOrderProductInput{
+	orderInput2 := []CreateOrderInput{
 		{
 			ProductID: productB.ID,
 			Price:     productB.SellingPrice,
@@ -192,44 +193,46 @@ func TestOrderTxDeadlock(t *testing.T) {
 		},
 	}
 
-	n := 10
+	n := 15
 	totalTx := n * 2
 	errs := make(chan error, totalTx)
-	results := make(chan OrderTxResult, totalTx)
 
 	for i := 0; i < n; i++ {
-		go func() {
-			arg := OrderTxParams{
-				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
-				PaymentMethod: PaymentMethodBankTransfer,
-				OrderProducts: orderProductInput1,
-				Comment:       sql.NullString{String: "test Order", Valid: true},
-			}
+		txName := fmt.Sprintf("tx %d", i+1)
 
-			result, err := store.OrderTx(context.Background(), arg)
-			errs <- err
-			results <- result
-		}()
+		if i%2 == 1 {
+			go func() {
+				ctx := context.WithValue(context.Background(), txKey, txName)
+				arg := OrderTxParams{
+					CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+					PaymentMethod: PaymentMethodBankTransfer,
+					OrderInput:    orderInput1,
+					Comment:       sql.NullString{String: "test Order", Valid: true},
+				}
 
-		go func() {
-			arg := OrderTxParams{
-				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
-				PaymentMethod: PaymentMethodBankTransfer,
-				OrderProducts: orderProductInput2,
-				Comment:       sql.NullString{String: "test Order", Valid: true},
-			}
+				_, err := store.OrderTx(ctx, arg)
+				errs <- err
+			}()
+		} else {
+			go func() {
+				ctx := context.WithValue(context.Background(), txKey, txName)
+				arg := OrderTxParams{
+					CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+					PaymentMethod: PaymentMethodBankTransfer,
+					OrderInput:    orderInput2,
+					Comment:       sql.NullString{String: "test Order", Valid: true},
+				}
 
-			result, err := store.OrderTx(context.Background(), arg)
-			errs <- err
-			results <- result
-		}()
+				_, err := store.OrderTx(ctx, arg)
+				errs <- err
+			}()
+		}
 	}
 
 	for i := 0; i < n; i++ {
 		err := <-errs
 		require.NoError(t, err)
 
-		<-results
 		// require.NotEmpty(t, result)
 
 		// order := result.Order

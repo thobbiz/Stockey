@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"sort"
 )
 
 type Store struct {
@@ -39,11 +40,11 @@ func (store *Store) execTX(ctx context.Context, fn func(*Queries) error) error {
 type OrderTxParams struct {
 	CustomerID    sql.NullInt64
 	PaymentMethod PaymentMethod
-	OrderProducts []CreateOrderProductInput
+	OrderInput    []CreateOrderInput
 	Comment       sql.NullString
 }
 
-type CreateOrderProductInput struct {
+type CreateOrderInput struct {
 	ProductID int64 `json:"product_id"`
 	Price     int64 `json:"price"`
 	Quantity  int64 `json:"quantity"`
@@ -62,29 +63,40 @@ type OrderTxResult struct {
 	Entry         []Entry `json:"entry"`
 }
 
+var txKey = struct{}{}
+
 func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResult, error) {
 	var result OrderTxResult
 
 	err := store.execTX(ctx, func(q *Queries) error {
 		var err error
 
+		txName := ctx.Value(txKey)
+
 		// Create order
+		fmt.Println(txName, "create order")
 		result.Order, err = q.CreateOrder(ctx, CreateOrderParams{
 			CustomerID:  arg.CustomerID,
-			TotalAmount: calculateTotal(arg.OrderProducts),
+			TotalAmount: calculateTotal(arg.OrderInput),
 			Comment:     arg.Comment,
 		})
 		if err != nil {
 			return err
 		}
 
-		for _, orderProduct := range arg.OrderProducts {
+		sortedInputs := make([]CreateOrderInput, len(arg.OrderInput))
+		copy(sortedInputs, arg.OrderInput)
+		sort.Slice(sortedInputs, func(i, j int) bool {
+			return sortedInputs[i].ProductID < sortedInputs[j].ProductID
+		})
+
+		for _, input := range sortedInputs {
 
 			// Create entry
-			fmt.Printf("create entry for product %d\n", orderProduct.ProductID)
+			fmt.Printf("%v create entry for product %d\n", txName, input.ProductID)
 			Entry, err := q.CreateEntry(ctx, CreateEntryParams{
-				ProductID: orderProduct.ProductID,
-				Quantity:  -orderProduct.Quantity,
+				ProductID: input.ProductID,
+				Quantity:  -input.Quantity,
 			})
 			if err != nil {
 				return err
@@ -93,34 +105,34 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 			result.Entry = append(result.Entry, Entry)
 
 			//Check if product exists
-			product, err := q.GetProductForUpdate(ctx, orderProduct.ProductID)
+			product, err := q.GetProductForUpdate(ctx, input.ProductID)
 			if err != nil {
 				if err == sql.ErrNoRows {
-					return fmt.Errorf("product %d not found", orderProduct.ProductID)
+					return fmt.Errorf("product %d not found", input.ProductID)
 				}
 				return fmt.Errorf("failed to check product availability: %w", err)
 			}
 
 			// Verify if there is Sufficient Products
-			if orderProduct.Quantity > product.Quantity {
-				return fmt.Errorf("insufficient quantity for product %d: need %d, have %d", orderProduct.ProductID, orderProduct.Quantity, product.Quantity)
+			if input.Quantity > product.Quantity {
+				return fmt.Errorf("insufficient quantity for product %d: need %d, have %d", input.ProductID, input.Quantity, product.Quantity)
 			}
 
 			// Add orderproduct to table
-			op, err := q.CreateOrderProduct(ctx, CreateOrderProductParams{
+			orderProduct, err := q.CreateOrderProduct(ctx, CreateOrderProductParams{
 				OrderID:   result.Order.ID,
-				ProductID: orderProduct.ProductID,
-				Price:     orderProduct.Price,
-				Quantity:  orderProduct.Quantity,
+				ProductID: input.ProductID,
+				Price:     input.Price,
+				Quantity:  input.Quantity,
 			})
 			if err != nil {
 				return err
 			}
 			// Append OrderProduct to result
-			result.OrderProducts = append(result.OrderProducts, op)
+			result.OrderProducts = append(result.OrderProducts, orderProduct)
 
 			// Remove quantity from inventory
-			_, err = removeQuantity(ctx, q, orderProduct.ProductID, orderProduct.Quantity)
+			_, err = removeQuantity(ctx, q, input.ProductID, input.Quantity)
 			if err != nil {
 				return err
 			}
@@ -166,7 +178,7 @@ func removeQuantity(
 	return
 }
 
-func calculateTotal(orderProducts []CreateOrderProductInput) int64 {
+func calculateTotal(orderProducts []CreateOrderInput) int64 {
 	var total int64
 	for _, product := range orderProducts {
 		total += product.Price * product.Quantity
