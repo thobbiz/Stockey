@@ -232,33 +232,5 @@ func TestOrderTxDeadlock(t *testing.T) {
 	for i := 0; i < n; i++ {
 		err := <-errs
 		require.NoError(t, err)
-
-		// require.NotEmpty(t, result)
-
-		// order := result.Order
-		// require.NotEmpty(t, order)
-		// require.Equal(t, order.CustomerID.Int64, customer.ID)
-		// require.NotZero(t, order.CreatedAt)
-		// require.NotZero(t, order.ID)
-
-		// _, err = store.GetOrder(context.Background(), order.ID)
-		// require.NoError(t, err)
-
-		// entries := result.Entry
-		// for _, entry := range entries {
-		// 	require.NotEmpty(t, entry)
-		// 	require.NotZero(t, entry.CreatedAt)
-		// 	require.NotZero(t, entry.ID)
-		// 	require.Equal(t, entry.ProductID, productA.ID)
-		// 	require.Equal(t, entry.Quantity, -amount)
-		// }
-
-		// orderProducts := result.OrderProducts
-		// for _, orderProduct := range orderProducts {
-		// 	require.NotEmpty(t, orderProduct)
-		// 	require.Equal(t, orderProduct.Price, product.SellingPrice)
-		// 	require.NotZero(t, orderProduct.OrderID, order.ID)
-		// 	require.Equal(t, orderProduct.ProductID, product.ID)
-		// }
 	}
 }

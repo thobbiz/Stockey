@@ -54,7 +54,7 @@ type OrderProductParams struct {
 	OrderID   int64 `json:"order_id"`
 	ProductID int64 `json:"product_id"`
 	Price     int64 `json:"price"`
-	Quantity  int64 `json:"qunatity"`
+	Quantity  int64 `json:"quantity"`
 }
 
 type OrderTxResult struct {
