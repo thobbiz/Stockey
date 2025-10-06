@@ -106,12 +106,6 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 				return fmt.Errorf("insufficient quantity for product %d: need %d, have %d", orderProduct.ProductID, orderProduct.Quantity, product.Quantity)
 			}
 
-			// Remove quantity from inventory
-			_, err = removeQuantity(ctx, q, orderProduct.ProductID, orderProduct.Quantity)
-			if err != nil {
-				return err
-			}
-
 			// Add orderproduct to table
 			op, err := q.CreateOrderProduct(ctx, CreateOrderProductParams{
 				OrderID:   result.Order.ID,
@@ -124,6 +118,12 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 			}
 			// Append OrderProduct to result
 			result.OrderProducts = append(result.OrderProducts, op)
+
+			// Remove quantity from inventory
+			_, err = removeQuantity(ctx, q, orderProduct.ProductID, orderProduct.Quantity)
+			if err != nil {
+				return err
+			}
 		}
 
 		result.Order, err = q.UpdatePaymentMethod(ctx,

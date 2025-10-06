@@ -1,19 +1,17 @@
 package com.example.project_umbrella.ui.screens.HomeScreens
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
 import  co.yml.charts.common.model.Point
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import co.yml.charts.axis.AxisData
 import co.yml.charts.ui.linechart.LineChart
@@ -28,7 +26,7 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
 import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 
-val interval = floatArrayOf(10f, 20f)
+val interval = floatArrayOf(10f, 25f)
 val daysOfWeek = listOf("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su")
 
 
@@ -50,13 +48,13 @@ fun LineChart(
     )
 
     val xAxisData = AxisData.Builder()
-        .axisStepSize(60.dp)
+        .axisStepSize(52.dp)
         .backgroundColor(Color.Transparent)
         .steps(pointsData.size - 1)
         .labelData{i ->
             daysOfWeek.getOrElse(i) {"$i"}
         }
-        .labelAndAxisLinePadding(0.dp)
+        .labelAndAxisLinePadding(10.dp)
         .axisLineColor(Color.Transparent)
         .axisLabelColor(Color(0xff919191))
         .build()
@@ -76,7 +74,7 @@ fun LineChart(
                 Line(
                     dataPoints = pointsData,
                     LineStyle(
-                        width = 6f,
+                        width = 7f,
                         color = Color(0xff0081f7),
                         lineType = LineType.SmoothCurve(isDotted = false)
                     ),
@@ -87,7 +85,7 @@ fun LineChart(
                     SelectionHighlightPoint(Color.Transparent),
                     ShadowUnderLine(
                         alpha = 0.25f,
-                        brush = Brush.verticalGradient(
+                        brush = Brush.linearGradient(
                             colors = listOf(
                                 Color(0xff85d6f4),
                                 Color.Transparent
@@ -98,21 +96,27 @@ fun LineChart(
                 )
             ),
         ),
+        isZoomAllowed = false,
+        paddingRight = 0.dp,
+        containerPaddingEnd = 0.dp,
+        paddingTop = 4.dp,
+        bottomPadding = 0.dp,
         backgroundColor = color,
         xAxisData = xAxisData,
         yAxisData = yAxisData,
         gridLines = GridLines(
             enableHorizontalLines = true,
-            pathEffect = PathEffect.dashPathEffect( intervals = interval, 0F),
             enableVerticalLines = false,
-            color = Color(0xffd9d9d9)
+            pathEffect = PathEffect.dashPathEffect( intervals = interval, 0F),
+            color = Color(0xff919191)
         )
     )
 
     LineChart(
         modifier = Modifier
         .fillMaxWidth()
-        .height(350.dp),
+        .fillMaxHeight()
+            .padding(1.dp),
         lineChartData = lineChartData
     )
 }

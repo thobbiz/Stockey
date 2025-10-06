@@ -33,4 +33,6 @@
     <string name="products_list">Products list</string>
     <string name="measurement_unit">Measurement unit</string>
     <string name="home">Home</string>
+    <string name="revenue">Revenue</string>
+    <string name="dashboard">Dashboard</string>
 </resources>

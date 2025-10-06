@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,8 +62,9 @@ fun HomeScreenBody(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Revenue",
+                text = stringResource(R.string.revenue),
                 style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.SemiBold,
                 color = Color(0xff919191),
             )
 
@@ -90,7 +92,7 @@ private fun HomeScreenTopAppBar() {
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp)
     ) {
         Text(
-            text = "Dashboard",
+            text = stringResource(R.string.dashboard),
             style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onPrimary
@@ -101,7 +103,7 @@ private fun HomeScreenTopAppBar() {
             onClick = {}
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.add),
+                imageVector = ImageVector.vectorResource(R.drawable.add_icon),
                 contentDescription = null
             )
         }

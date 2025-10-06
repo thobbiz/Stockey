@@ -13,10 +13,14 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,9 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -105,7 +107,8 @@ fun InventoryScreen(
             totalProducts = totalProducts,
             totalStocks = totalStocks,
             onProductClick = navigateToProductDetail,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
@@ -131,7 +134,6 @@ private fun InventoryBody(
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
-
         if (productList.isEmpty()) {
             Column(
                 modifier = modifier
@@ -149,16 +151,18 @@ private fun InventoryBody(
         } else {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TotalProducts(totalProducts = totalProducts)
                 TotalStocks(totalStocks = totalStocks)
             }
+
             InventoryProductList(
                 productList = productList,
-                onProductClick = { onProductClick(it.id) },
+                onProductClick = { onProductClick(it.productId) },
                 contentPadding = contentPadding,
                 modifier = Modifier.weight(1f)
             )
@@ -173,26 +177,27 @@ private fun InventoryProductList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(0.dp)
-    ){
-        item {
-            Text(text = stringResource(R.string.products_list), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
-        }
-        items(
-            items = productList,
-            key = { it.id }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            text = stringResource(R.string.products_list),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color(0xff919191)
+        )
+        LazyColumn(
+            modifier = modifier.fillMaxWidth().padding(0.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-                product ->
-            InventoryItem(
-                product = product,
-                modifier = Modifier
-                    .padding(vertical = 0.dp),
-                onProductClick = { onProductClick(product) }
-            )
+            itemsIndexed(productList) { _, product ->
+                InventoryItem(
+                    product = product,
+                    modifier = Modifier
+                        .padding(vertical = 0.dp),
+                    onProductClick = { onProductClick(product) }
+                )
+            }
         }
     }
 }
@@ -202,7 +207,9 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onP
 
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth().clickable(
+               onClick = onProductClick
+            ).height(55.dp),
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(3.dp),
     ) {
@@ -222,16 +229,14 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onP
                     if (product.quantity < 20) {
                         Card(
                             modifier = Modifier.padding(start = 7.dp),
-                            shape = RoundedCornerShape(8.dp),
+                            shape = RoundedCornerShape(4.dp),
                             colors = CardDefaults.cardColors(containerColor = Color(0xfff9ded2))
                         ) {
-                            Text("Low", color = Color(0xfff98048), style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(5.dp))
+                            Text("Low", color = Color(0xfff98048), style = MaterialTheme.typography.labelSmall, modifier = Modifier.padding(3.dp))
                         }
                     }
                 }
-
                 Spacer(Modifier.weight(1f))
-
                 IconButton(
                     onClick = onProductClick,
                     modifier = Modifier.padding(0.dp)
@@ -250,7 +255,9 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onP
 
 @Composable
 private fun TotalProducts(totalProducts: Int) {
-    Column {
+    Column(
+        modifier = Modifier.wrapContentSize()
+    ) {
         Text(text = stringResource(R.string.total_products), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
         Text(text = "$totalProducts", style = MaterialTheme.typography.displayLarge, fontWeight = FontWeight.SemiBold)
     }
@@ -258,7 +265,9 @@ private fun TotalProducts(totalProducts: Int) {
 
 @Composable
 private fun TotalStocks(totalStocks: Int) {
-    Column {
+    Column(
+        modifier = Modifier.wrapContentSize()
+    ) {
         Text(text = stringResource(R.string.total_stocks), style = MaterialTheme.typography.bodyMedium, color = Color(0xff919191))
         Text(text = "$totalStocks", style = MaterialTheme.typography.displayLarge, fontWeight = FontWeight.SemiBold)
     }
@@ -289,7 +298,7 @@ fun InventoryScreenTopAppBar(
             onClick = {}
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.search),
+                imageVector = ImageVector.vectorResource(R.drawable.search_icon),
                 contentDescription = null
             )
         }

@@ -138,5 +138,124 @@ func TestOrderTxConcurrent(t *testing.T) {
 	// Verify final product quantity
 	finalProduct, err := store.GetProduct(context.Background(), product.ID)
 	require.NoError(t, err)
-	require.Equal(t, int64(0), finalProduct.Quantity) // 7 - (3*3) = 1
+	require.Equal(t, int64(0), finalProduct.Quantity)
+}
+
+func TestOrderTxDeadlock(t *testing.T) {
+	store := NewStore(testDB)
+	amount := int64(2)
+
+	customer := createRandomCustomer(t)
+	productA, _ := store.CreateProduct(context.Background(), CreateProductParams{
+		Name:         "Product A",
+		CostPrice:    950,
+		SellingPrice: 1000,
+		Quantity:     100,
+		Unit:         "bags",
+		Description:  sql.NullString{String: "why", Valid: true},
+	})
+
+	productB, _ := store.CreateProduct(context.Background(), CreateProductParams{
+		Name:         "Product A",
+		CostPrice:    950,
+		SellingPrice: 1000,
+		Quantity:     100,
+		Unit:         "bags",
+		Description:  sql.NullString{String: "why", Valid: true},
+	})
+
+	orderProductInput1 := []CreateOrderProductInput{
+		{
+			ProductID: productA.ID,
+			Price:     productA.SellingPrice,
+			Quantity:  int64(amount),
+		},
+
+		{
+			ProductID: productB.ID,
+			Price:     productB.SellingPrice,
+			Quantity:  int64(amount),
+		},
+	}
+
+	orderProductInput2 := []CreateOrderProductInput{
+		{
+			ProductID: productB.ID,
+			Price:     productB.SellingPrice,
+			Quantity:  int64(amount),
+		},
+
+		{
+			ProductID: productA.ID,
+			Price:     productA.SellingPrice,
+			Quantity:  int64(amount),
+		},
+	}
+
+	n := 10
+	totalTx := n * 2
+	errs := make(chan error, totalTx)
+	results := make(chan OrderTxResult, totalTx)
+
+	for i := 0; i < n; i++ {
+		go func() {
+			arg := OrderTxParams{
+				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+				PaymentMethod: PaymentMethodBankTransfer,
+				OrderProducts: orderProductInput1,
+				Comment:       sql.NullString{String: "test Order", Valid: true},
+			}
+
+			result, err := store.OrderTx(context.Background(), arg)
+			errs <- err
+			results <- result
+		}()
+
+		go func() {
+			arg := OrderTxParams{
+				CustomerID:    sql.NullInt64{Int64: customer.ID, Valid: true},
+				PaymentMethod: PaymentMethodBankTransfer,
+				OrderProducts: orderProductInput2,
+				Comment:       sql.NullString{String: "test Order", Valid: true},
+			}
+
+			result, err := store.OrderTx(context.Background(), arg)
+			errs <- err
+			results <- result
+		}()
+	}
+
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+		<-results
+		// require.NotEmpty(t, result)
+
+		// order := result.Order
+		// require.NotEmpty(t, order)
+		// require.Equal(t, order.CustomerID.Int64, customer.ID)
+		// require.NotZero(t, order.CreatedAt)
+		// require.NotZero(t, order.ID)
+
+		// _, err = store.GetOrder(context.Background(), order.ID)
+		// require.NoError(t, err)
+
+		// entries := result.Entry
+		// for _, entry := range entries {
+		// 	require.NotEmpty(t, entry)
+		// 	require.NotZero(t, entry.CreatedAt)
+		// 	require.NotZero(t, entry.ID)
+		// 	require.Equal(t, entry.ProductID, productA.ID)
+		// 	require.Equal(t, entry.Quantity, -amount)
+		// }
+
+		// orderProducts := result.OrderProducts
+		// for _, orderProduct := range orderProducts {
+		// 	require.NotEmpty(t, orderProduct)
+		// 	require.Equal(t, orderProduct.Price, product.SellingPrice)
+		// 	require.NotZero(t, orderProduct.OrderID, order.ID)
+		// 	require.Equal(t, orderProduct.ProductID, product.ID)
+		// }
+	}
 }

@@ -44,7 +44,7 @@ val Typography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = Poppins,
-        fontSize = 14.sp
+        fontSize = 10.sp
     ),
     labelLarge = TextStyle(
         fontFamily = Poppins,
