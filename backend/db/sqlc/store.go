@@ -40,13 +40,12 @@ func (store *Store) execTX(ctx context.Context, fn func(*Queries) error) error {
 type OrderTxParams struct {
 	CustomerID    sql.NullInt64
 	PaymentMethod PaymentMethod
-	OrderInput    []CreateOrderInput
+	OrderInput    []OrderInput
 	Comment       sql.NullString
 }
 
-type CreateOrderInput struct {
+type OrderInput struct {
 	ProductID int64 `json:"product_id"`
-	Price     int64 `json:"price"`
 	Quantity  int64 `json:"quantity"`
 }
 
@@ -70,21 +69,29 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 
 	err := store.execTX(ctx, func(q *Queries) error {
 		var err error
-
 		txName := ctx.Value(txKey)
+
+		var total int64
+		for _, productInput := range arg.OrderInput {
+			product, err := q.GetProduct(ctx, productInput.ProductID)
+			if err != nil {
+				return err
+			}
+			total += product.SellingPrice * productInput.Quantity
+		}
 
 		// Create order
 		fmt.Println(txName, "create order")
 		result.Order, err = q.CreateOrder(ctx, CreateOrderParams{
 			CustomerID:  arg.CustomerID,
-			TotalAmount: calculateTotal(arg.OrderInput),
+			TotalAmount: total,
 			Comment:     arg.Comment,
 		})
 		if err != nil {
 			return err
 		}
 
-		sortedInputs := make([]CreateOrderInput, len(arg.OrderInput))
+		sortedInputs := make([]OrderInput, len(arg.OrderInput))
 		copy(sortedInputs, arg.OrderInput)
 		sort.Slice(sortedInputs, func(i, j int) bool {
 			return sortedInputs[i].ProductID < sortedInputs[j].ProductID
@@ -122,7 +129,7 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 			orderProduct, err := q.CreateOrderProduct(ctx, CreateOrderProductParams{
 				OrderID:   result.Order.ID,
 				ProductID: input.ProductID,
-				Price:     input.Price,
+				Price:     product.SellingPrice,
 				Quantity:  input.Quantity,
 			})
 			if err != nil {
@@ -176,12 +183,4 @@ func removeQuantity(
 		return
 	}
 	return
-}
-
-func calculateTotal(orderProducts []CreateOrderInput) int64 {
-	var total int64
-	for _, product := range orderProducts {
-		total += product.Price * product.Quantity
-	}
-	return total
 }

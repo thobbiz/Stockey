@@ -45,16 +45,14 @@ func TestOrderTx(t *testing.T) {
 	require.NotZero(t, product2.ID)
 	require.NotZero(t, product2.CreatedAt)
 
-	orderInput := []CreateOrderInput{
+	orderInput := []OrderInput{
 		{
 			ProductID: product1.ID,
-			Price:     product1.SellingPrice,
 			Quantity:  2,
 		},
 
 		{
 			ProductID: product2.ID,
-			Price:     product1.SellingPrice,
 			Quantity:  3,
 		},
 	}
@@ -105,10 +103,9 @@ func TestOrderTxConcurrent(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	orderInput := []CreateOrderInput{
+	orderInput := []OrderInput{
 		{
 			ProductID: product.ID,
-			Price:     product.SellingPrice,
 			Quantity:  int64(amount),
 		},
 	}
@@ -195,30 +192,26 @@ func TestOrderTxDeadlock(t *testing.T) {
 		Description:  sql.NullString{String: "why", Valid: true},
 	})
 
-	orderInput1 := []CreateOrderInput{
+	orderInput1 := []OrderInput{
 		{
 			ProductID: productA.ID,
-			Price:     productA.SellingPrice,
 			Quantity:  int64(amount),
 		},
 
 		{
 			ProductID: productB.ID,
-			Price:     productB.SellingPrice,
 			Quantity:  int64(amount),
 		},
 	}
 
-	orderInput2 := []CreateOrderInput{
+	orderInput2 := []OrderInput{
 		{
 			ProductID: productB.ID,
-			Price:     productB.SellingPrice,
 			Quantity:  int64(amount),
 		},
 
 		{
 			ProductID: productA.ID,
-			Price:     productA.SellingPrice,
 			Quantity:  int64(amount),
 		},
 	}
