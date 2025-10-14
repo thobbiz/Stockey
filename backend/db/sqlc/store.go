@@ -98,7 +98,6 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 		})
 
 		for _, input := range sortedInputs {
-
 			// Create entry
 			fmt.Printf("%v create entry for product %d\n", txName, input.ProductID)
 			Entry, err := q.CreateEntry(ctx, CreateEntryParams{
@@ -122,7 +121,8 @@ func (store *Store) OrderTx(ctx context.Context, arg OrderTxParams) (OrderTxResu
 
 			// Verify if there is Sufficient Products
 			if input.Quantity > product.Quantity {
-				return fmt.Errorf("insufficient quantity for product %d: need %d, have %d", input.ProductID, input.Quantity, product.Quantity)
+				err = fmt.Errorf("insufficient quantity for product %d: need %d, have %d", input.ProductID, input.Quantity, product.Quantity)
+				return err
 			}
 
 			// Add orderproduct to table

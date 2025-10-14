@@ -1,0 +1,5 @@
+ALTER TABLE IF EXISTS "products" DROP CONSTRAINT IF EXISTS "owner_name_key";
+
+ALTER TABLE IF EXISTS "products" DROP CONSTRAINT IF EXISTS "products_owner_fkey";
+
+DROP TABLE IF EXISTS "users";

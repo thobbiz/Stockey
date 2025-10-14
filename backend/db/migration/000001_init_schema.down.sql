@@ -3,3 +3,5 @@ DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS entries;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS customers;
+DROP TYPE IF EXISTS order_status;
+DROP TYPE IF EXISTS payment_method;

@@ -1,5 +1,6 @@
 -- name: CreateProduct :one
 INSERT INTO products (
+  owner,
   name,
   cost_price,
   selling_price,
@@ -7,7 +8,7 @@ INSERT INTO products (
   unit,
   description
 ) VALUES (
-  $1, $2, $3, $4, $5, $6
+  $1, $2, $3, $4, $5, $6, $7
 )
 RETURNING *;
 

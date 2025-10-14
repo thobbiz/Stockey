@@ -11,7 +11,7 @@ import (
 )
 
 const addQuantity = `-- name: AddQuantity :one
-UPDATE products SET quantity = quantity + $1 WHERE id = $2 RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+UPDATE products SET quantity = quantity + $1 WHERE id = $2 RETURNING id, owner, name, cost_price, selling_price, quantity, unit, description, created_at
 `
 
 type AddQuantityParams struct {
@@ -24,6 +24,7 @@ func (q *Queries) AddQuantity(ctx context.Context, arg AddQuantityParams) (Produ
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,
@@ -37,6 +38,7 @@ func (q *Queries) AddQuantity(ctx context.Context, arg AddQuantityParams) (Produ
 
 const createProduct = `-- name: CreateProduct :one
 INSERT INTO products (
+  owner,
   name,
   cost_price,
   selling_price,
@@ -44,12 +46,13 @@ INSERT INTO products (
   unit,
   description
 ) VALUES (
-  $1, $2, $3, $4, $5, $6
+  $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+RETURNING id, owner, name, cost_price, selling_price, quantity, unit, description, created_at
 `
 
 type CreateProductParams struct {
+	Owner        string         `json:"owner"`
 	Name         string         `json:"name"`
 	CostPrice    int64          `json:"cost_price"`
 	SellingPrice int64          `json:"selling_price"`
@@ -60,6 +63,7 @@ type CreateProductParams struct {
 
 func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
 	row := q.db.QueryRowContext(ctx, createProduct,
+		arg.Owner,
 		arg.Name,
 		arg.CostPrice,
 		arg.SellingPrice,
@@ -70,6 +74,7 @@ func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (P
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,
@@ -91,7 +96,7 @@ func (q *Queries) DeleteProduct(ctx context.Context, id int64) error {
 }
 
 const getProduct = `-- name: GetProduct :one
-SELECT id, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
+SELECT id, owner, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
 WHERE id = $1 LIMIT 1
 `
 
@@ -100,6 +105,7 @@ func (q *Queries) GetProduct(ctx context.Context, id int64) (Product, error) {
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,
@@ -112,7 +118,7 @@ func (q *Queries) GetProduct(ctx context.Context, id int64) (Product, error) {
 }
 
 const getProductForUpdate = `-- name: GetProductForUpdate :one
-SELECT id, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
+SELECT id, owner, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
 WHERE id = $1 LIMIT 1
 FOR NO KEY UPDATE
 `
@@ -122,6 +128,7 @@ func (q *Queries) GetProductForUpdate(ctx context.Context, id int64) (Product, e
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,
@@ -134,7 +141,7 @@ func (q *Queries) GetProductForUpdate(ctx context.Context, id int64) (Product, e
 }
 
 const listProducts = `-- name: ListProducts :many
-SELECT id, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
+SELECT id, owner, name, cost_price, selling_price, quantity, unit, description, created_at FROM products
 ORDER BY id LIMIT $1 OFFSET $2
 `
 
@@ -154,6 +161,7 @@ func (q *Queries) ListProducts(ctx context.Context, arg ListProductsParams) ([]P
 		var i Product
 		if err := rows.Scan(
 			&i.ID,
+			&i.Owner,
 			&i.Name,
 			&i.CostPrice,
 			&i.SellingPrice,
@@ -179,7 +187,7 @@ const updateCostPrice = `-- name: UpdateCostPrice :one
 UPDATE products 
 SET cost_price = $1
 WHERE id = $2
-RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+RETURNING id, owner, name, cost_price, selling_price, quantity, unit, description, created_at
 `
 
 type UpdateCostPriceParams struct {
@@ -192,6 +200,7 @@ func (q *Queries) UpdateCostPrice(ctx context.Context, arg UpdateCostPriceParams
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,
@@ -207,7 +216,7 @@ const updateSellingPrice = `-- name: UpdateSellingPrice :one
 UPDATE products 
 SET selling_price = $1
 WHERE id = $2
-RETURNING id, name, cost_price, selling_price, quantity, unit, description, created_at
+RETURNING id, owner, name, cost_price, selling_price, quantity, unit, description, created_at
 `
 
 type UpdateSellingPriceParams struct {
@@ -220,6 +229,7 @@ func (q *Queries) UpdateSellingPrice(ctx context.Context, arg UpdateSellingPrice
 	var i Product
 	err := row.Scan(
 		&i.ID,
+		&i.Owner,
 		&i.Name,
 		&i.CostPrice,
 		&i.SellingPrice,

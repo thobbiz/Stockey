@@ -14,6 +14,7 @@ CREATE TYPE "payment_method" AS ENUM (
 
 CREATE TABLE "products" (
   "id" BIGSERIAL PRIMARY KEY,
+  "owner" varchar NOT NULL,
   "name" varchar NOT NULL,
   "cost_price" bigint NOT NULL,
   "selling_price" bigint NOT NULL,
@@ -54,6 +55,8 @@ CREATE TABLE "customers" (
   "phone" bigint,
   "created_at" timestamptz NOT NULL DEFAULT 'now()'
 );
+
+CREATE INDEX ON "products" ("owner");
 
 CREATE INDEX ON "products" ("name");
 

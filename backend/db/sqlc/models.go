@@ -132,6 +132,7 @@ type OrderProduct struct {
 
 type Product struct {
 	ID           int64          `json:"id"`
+	Owner        string         `json:"owner"`
 	Name         string         `json:"name"`
 	CostPrice    int64          `json:"cost_price"`
 	SellingPrice int64          `json:"selling_price"`
@@ -139,4 +140,13 @@ type Product struct {
 	Unit         string         `json:"unit"`
 	Description  sql.NullString `json:"description"`
 	CreatedAt    time.Time      `json:"created_at"`
+}
+
+type User struct {
+	Username          string    `json:"username"`
+	HashedPassword    string    `json:"hashed_password"`
+	FullName          string    `json:"full_name"`
+	Email             string    `json:"email"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	CreatedAt         time.Time `json:"created_at"`
 }

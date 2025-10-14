@@ -11,7 +11,9 @@ import (
 )
 
 func createRandomProduct(t *testing.T) Product {
+	user := createRandomUser(t)
 	arg := CreateProductParams{
+		Owner:        user.Username,
 		Name:         utilities.RandomName(),
 		CostPrice:    utilities.RandomPrice(),
 		SellingPrice: utilities.RandomPrice(),

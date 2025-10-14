@@ -11,12 +11,14 @@ import (
 )
 
 func TestOrderTx(t *testing.T) {
+	user := createRandomUser(t)
 	store := NewStore(testDB)
 	customer := createRandomCustomer(t)
 
 	product1, err := store.CreateProduct(
 		context.Background(),
 		CreateProductParams{
+			Owner:        user.Username,
 			Name:         utilities.RandomName(),
 			CostPrice:    int64(1000),
 			SellingPrice: int64(1500),
@@ -32,6 +34,7 @@ func TestOrderTx(t *testing.T) {
 	product2, err := store.CreateProduct(
 		context.Background(),
 		CreateProductParams{
+			Owner:        user.Username,
 			Name:         utilities.RandomName(),
 			CostPrice:    int64(1000),
 			SellingPrice: int64(1500),
@@ -90,10 +93,12 @@ func TestOrderTx(t *testing.T) {
 
 func TestOrderTxConcurrent(t *testing.T) {
 	store := NewStore(testDB)
+	user := createRandomUser(t)
 	amount := int64(2)
 
 	customer := createRandomCustomer(t)
 	product, err := store.CreateProduct(context.Background(), CreateProductParams{
+		Owner:        user.Username,
 		Name:         "Limited Product",
 		CostPrice:    950,
 		SellingPrice: 1000,
@@ -171,10 +176,11 @@ func TestOrderTxConcurrent(t *testing.T) {
 
 func TestOrderTxDeadlock(t *testing.T) {
 	store := NewStore(testDB)
+	user := createRandomUser(t)
 	amount := int64(2)
-
 	customer := createRandomCustomer(t)
 	productA, _ := store.CreateProduct(context.Background(), CreateProductParams{
+		Owner:        user.Username,
 		Name:         "Product A",
 		CostPrice:    950,
 		SellingPrice: 1000,
@@ -182,9 +188,9 @@ func TestOrderTxDeadlock(t *testing.T) {
 		Unit:         "bags",
 		Description:  sql.NullString{String: "why", Valid: true},
 	})
-
 	productB, _ := store.CreateProduct(context.Background(), CreateProductParams{
-		Name:         "Product A",
+		Owner:        user.Username,
+		Name:         "Product B",
 		CostPrice:    950,
 		SellingPrice: 1000,
 		Quantity:     100,
@@ -193,37 +199,22 @@ func TestOrderTxDeadlock(t *testing.T) {
 	})
 
 	orderInput1 := []OrderInput{
-		{
-			ProductID: productA.ID,
-			Quantity:  int64(amount),
-		},
-
-		{
-			ProductID: productB.ID,
-			Quantity:  int64(amount),
-		},
+		{ProductID: productA.ID, Quantity: amount},
+		{ProductID: productB.ID, Quantity: amount},
 	}
-
 	orderInput2 := []OrderInput{
-		{
-			ProductID: productB.ID,
-			Quantity:  int64(amount),
-		},
-
-		{
-			ProductID: productA.ID,
-			Quantity:  int64(amount),
-		},
+		{ProductID: productB.ID, Quantity: amount},
+		{ProductID: productA.ID, Quantity: amount},
 	}
 
 	n := 15
-	totalTx := n * 2
-	errs := make(chan error, totalTx)
+	errs := make(chan error, n)
 
 	for i := 0; i < n; i++ {
+		i := i // Capture loop variable
 		txName := fmt.Sprintf("tx %d", i+1)
 
-		if i%2 == 1 {
+		if i%2 == 0 {
 			go func() {
 				ctx := context.WithValue(context.Background(), txKey, txName)
 				arg := OrderTxParams{
@@ -232,7 +223,6 @@ func TestOrderTxDeadlock(t *testing.T) {
 					OrderInput:    orderInput1,
 					Comment:       sql.NullString{String: "test Order", Valid: true},
 				}
-
 				_, err := store.OrderTx(ctx, arg)
 				errs <- err
 			}()
@@ -245,7 +235,6 @@ func TestOrderTxDeadlock(t *testing.T) {
 					OrderInput:    orderInput2,
 					Comment:       sql.NullString{String: "test Order", Valid: true},
 				}
-
 				_, err := store.OrderTx(ctx, arg)
 				errs <- err
 			}()
