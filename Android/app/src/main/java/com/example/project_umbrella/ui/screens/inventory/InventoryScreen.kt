@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -106,7 +104,7 @@ fun InventoryScreen(
             productList = inventoryUiState.productsList,
             totalProducts = totalProducts,
             totalStocks = totalStocks,
-            onProductClick = navigateToProductDetail,
+            navigateToProduct = navigateToProductDetail,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
@@ -115,7 +113,6 @@ fun InventoryScreen(
                     top = innerPadding.calculateTopPadding()
                 )
                 .background(color = MaterialTheme.colorScheme.background),
-            contentPadding = innerPadding
             )
     }
 }
@@ -125,90 +122,57 @@ private fun InventoryBody(
     productList: List<Product>,
     totalProducts: Int,
     totalStocks: Int,
-    onProductClick: (Int) -> Unit,
+    navigateToProduct: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(30.dp),
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
-        if (productList.isEmpty()) {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.empty_inventory),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        } else {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TotalProducts(totalProducts = totalProducts)
-                TotalStocks(totalStocks = totalStocks)
-            }
-
-            InventoryProductList(
-                productList = productList,
-                onProductClick = { onProductClick(it.productId) },
-                contentPadding = contentPadding,
-                modifier = Modifier.weight(1f)
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TotalProducts(totalProducts = totalProducts)
+            TotalStocks(totalStocks = totalStocks)
         }
+        InventoryProductList(
+            productList = productList,
+            onProductClick = navigateToProduct
+        )
     }
 }
 
 @Composable
 private fun InventoryProductList(
     productList: List<Product>,
-    onProductClick: (Product) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    onProductClick: (Int) -> Unit
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Text(
-            text = stringResource(R.string.products_list),
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xff919191)
-        )
+    if (productList.isEmpty()) {
+        EmptyScreen()
+    } else {
         LazyColumn(
-            modifier = modifier.fillMaxWidth().padding(0.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.fillMaxWidth().padding(0.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             itemsIndexed(productList) { _, product ->
-                InventoryItem(
-                    product = product,
-                    modifier = Modifier
-                        .padding(vertical = 0.dp),
-                    onProductClick = { onProductClick(product) }
-                )
+                InventoryItem(product, onProductClick)
             }
         }
     }
 }
 
 @Composable
-private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onProductClick: () -> Unit = {}) {
-
+private fun InventoryItem(product: Product, onProductClick: (Int) -> Unit) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth().clickable(
-               onClick = onProductClick
+               onClick = { onProductClick(product.productId) }
             ).height(55.dp),
         colors = CardDefaults.cardColors(Color.Transparent),
         shape = RoundedCornerShape(3.dp),
@@ -238,7 +202,7 @@ private fun InventoryItem( modifier : Modifier = Modifier, product: Product, onP
                 }
                 Spacer(Modifier.weight(1f))
                 IconButton(
-                    onClick = onProductClick,
+                    onClick = { onProductClick(product.productId) },
                     modifier = Modifier.padding(0.dp)
                 ) {
                     Icon(
@@ -306,6 +270,23 @@ fun InventoryScreenTopAppBar(
 
 }
 
+@Composable
+private fun EmptyScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.empty_inventory),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
 var fake: List<Product> = listOf(
     Product(1, "Coaster", 3100.0, 2000.0, 4, measurementUnit = "Bags"),
     Product(2, "Feast", 5000.0, 7500.0, 107, measurementUnit = "Packs"),
@@ -316,6 +297,6 @@ var fake: List<Product> = listOf(
 @Composable
 fun InventoryBodyPreview() {
     ProjectumbrellaTheme {
-        InventoryBody(productList = fake, onProductClick = {}, totalProducts = 23, totalStocks = 90)
+        InventoryBody(productList = fake, navigateToProduct = {}, totalProducts = 23, totalStocks = 90)
     }
 }

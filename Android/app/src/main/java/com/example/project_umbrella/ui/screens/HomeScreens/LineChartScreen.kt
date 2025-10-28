@@ -116,7 +116,7 @@ fun LineChart(
         modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()
-            .padding(1.dp),
+            .padding(0.dp),
         lineChartData = lineChartData
     )
 }

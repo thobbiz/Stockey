@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TimeRangeSelector() {
-    var selectedIndex by remember { mutableStateOf<Int?>(null) }
+    var selectedIndex by remember { mutableIntStateOf(1) }
     val buttonLabels = listOf("1D", "1W", "1M", "3M", "6M", "1Y")
 
     Row(

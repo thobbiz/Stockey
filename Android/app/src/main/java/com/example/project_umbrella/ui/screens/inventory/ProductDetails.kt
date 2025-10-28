@@ -44,8 +44,6 @@ import com.example.project_umbrella.data.Product
 import com.example.project_umbrella.ui.AppViewModelProvider
 import com.example.project_umbrella.ui.navigation.NavigationDestination
 import com.example.project_umbrella.ui.theme.ProjectumbrellaTheme
-import com.example.project_umbrella.ui.screens.inventory.ProductDetailsUiState
-import com.example.project_umbrella.ui.screens.inventory.ProductDetailsViewModel
 import kotlinx.coroutines.launch
 
 object ProductDetailsDestination : NavigationDestination {
