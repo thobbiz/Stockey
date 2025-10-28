@@ -75,7 +75,7 @@ type listProductRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-func (server *Server) listAccounts(ctx *gin.Context) {
+func (server *Server) listProducts(ctx *gin.Context) {
 	var req listProductRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))

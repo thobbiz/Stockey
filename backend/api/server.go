@@ -18,13 +18,15 @@ func NewServer(store *db.Store) *Server {
 
 	router.POST("/products", server.createProduct)
 	router.GET("/products/:id", server.getProduct)
-	router.GET("/products", server.listAccounts)
+	router.GET("/products", server.listProducts)
 
 	router.POST("/customers", server.createCustomer)
 	router.GET("/customers/:id", server.getCustomer)
 	router.GET("/customers", server.listCustomers)
 
 	router.POST("/orders", server.createOrder)
+	router.GET("/orders/:id", server.getOrder)
+	router.GET("/orders", server.listOrders)
 
 	server.router = router
 	return server
