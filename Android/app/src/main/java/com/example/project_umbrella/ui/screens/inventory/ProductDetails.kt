@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -66,7 +65,10 @@ fun ProductDetailsScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            InventoryScreenTopAppBar(title = stringResource(id = R.string.product_details))
+            InventoryScreenTopAppBar(
+                title = stringResource(id = R.string.product_details),
+                isIcon = false
+            )
         }
     ) {innerPadding ->
         ProductDetailsBody(
@@ -79,12 +81,12 @@ fun ProductDetailsScreen(
             },
             onEditProduct = navigateToEditItem,
             modifier = Modifier
+                .fillMaxSize()
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
                 )
-                .verticalScroll(rememberScrollState())
         )
     }
 }
@@ -158,7 +160,7 @@ fun ProductDetails(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.padding(top = 20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         )
@@ -166,10 +168,10 @@ fun ProductDetails(
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(60.dp)
+            verticalArrangement = Arrangement.spacedBy(50.dp)
         ) {
            ProductDetailsRow(
-               labelResId = R.string.product,
+               labelResId = R.string.product_name,
                productDetail = product.name,
                modifier = Modifier.padding(
                    horizontal = 16.dp
