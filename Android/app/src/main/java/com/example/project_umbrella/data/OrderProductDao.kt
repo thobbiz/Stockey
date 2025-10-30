@@ -12,7 +12,10 @@ interface OrderProductDao {
     suspend fun insertOrderProduct(orderProduct: OrderProduct)
 
     @Query("SELECT * from order_products WHERE orderId = :orderId AND productId = productId LIMIT 1")
-    fun getOrderProduct(orderId: Int, productId: Int): Flow<OrderProduct>
+    fun getAOrderProduct(orderId: Int, productId: Int): Flow<OrderProduct>
+
+    @Query("SELECT * FROM order_products WHERE orderId = :orderId")
+    fun getOrderProducts(orderId: Int): Flow<List<OrderProduct>>
 
     @Query("SELECT * from order_products ORDER BY orderId, productId")
     fun getAllOrderProducts(): Flow<List<OrderProduct>>

@@ -67,6 +67,23 @@ func (q *Queries) GetOrderProduct(ctx context.Context, arg GetOrderProductParams
 	return i, err
 }
 
+const getOrderProducts = `-- name: GetOrderProducts :one
+SELECT order_id, product_id, price, quantity FROM order_products
+WHERE order_id = $1
+`
+
+func (q *Queries) GetOrderProducts(ctx context.Context, orderID int64) (OrderProduct, error) {
+	row := q.db.QueryRowContext(ctx, getOrderProducts, orderID)
+	var i OrderProduct
+	err := row.Scan(
+		&i.OrderID,
+		&i.ProductID,
+		&i.Price,
+		&i.Quantity,
+	)
+	return i, err
+}
+
 const listOrderProducts = `-- name: ListOrderProducts :many
 SELECT order_id, product_id, price, quantity FROM order_products
 ORDER BY order_id, product_id LIMIT $1 OFFSET $2
