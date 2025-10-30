@@ -1,6 +1,5 @@
 package com.example.project_umbrella.ui.screens.HomeScreens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,15 +32,21 @@ object HomeDestination: NavigationDestination {
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navigateToSale: () -> Unit
+) {
     Scaffold (
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            HomeScreenTopAppBar()
+            HomeScreenTopAppBar(
+                navigateToSale
+            )
         }
     ) {
         innerPadding ->
-        HomeScreenBody(innerPadding)
+        HomeScreenBody(
+            innerPadding
+        )
     }
 }
 
@@ -83,7 +88,9 @@ fun HomeScreenBody(
     }
 }
 @Composable
-private fun HomeScreenTopAppBar() {
+private fun HomeScreenTopAppBar(
+    navigateToSale: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -100,7 +107,7 @@ private fun HomeScreenTopAppBar() {
 
         IconButton(
             modifier = Modifier.padding(0.dp),
-            onClick = {}
+            onClick = navigateToSale
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.add_icon),

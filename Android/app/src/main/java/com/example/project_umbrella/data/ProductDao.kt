@@ -11,19 +11,29 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(product: Product)
-
-    @Update
-    suspend fun update(product: Product)
+    suspend fun insertProduct(product: Product)
 
     @Delete
-    suspend fun delete(product: Product)
+    @Query("DELETE FROM products WHERE id = :productId")
+    suspend fun deleteProduct(productId: Int)
 
-    @Query("SELECT * from products WHERE productId = :id")
-    fun getProduct(id: Int): Flow<Product>
+    @Query("SELECT * from products WHERE id = :productId LIMIT 1")
+    fun getProduct(productId: Int): Flow<Product>
 
-    @Query("SELECT * from products ORDER BY name ASC")
+    @Query("SELECT * from products")
     fun getAllProducts(): Flow<List<Product>>
+
+    @Update
+    @Query("UPDATE products SET quantity = quantity + :amount WHERE id = :productId")
+    suspend fun addQuantity(productId: Int, amount: Int)
+
+    @Update
+    @Query("UPDATE products SET sellingPrice = :sellingPrice WHERE id = :productId")
+    suspend fun updateSellingPrice(sellingPrice: Double, productId: Int)
+
+    @Update
+    @Query("UPDATE products SET costPrice = :costPrice WHERE id = :productId")
+    suspend fun updateCostPrice(costPrice: Double, productId: Int)
 
     @Query("SELECT COUNT(*) FROM products")
     fun getTotalProductsCount(): Flow<Int>

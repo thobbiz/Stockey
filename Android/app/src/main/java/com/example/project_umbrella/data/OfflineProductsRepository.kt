@@ -3,17 +3,23 @@ package com.example.project_umbrella.data
 import kotlinx.coroutines.flow.Flow
 
 class OfflineProductsRepository(private val productDao: ProductDao): ProductsRepository {
-    override fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
 
-    override suspend fun getTotalProductsCount(): Flow<Int> = productDao.getTotalProductsCount()
+
+    override suspend fun insertProduct(product: Product) = productDao.insertProduct(product)
+
+    override suspend fun deleteProduct(productId: Int) = productDao.deleteProduct(productId)
 
     override fun getProduct(id: Int): Flow<Product?> = productDao.getProduct(id)
 
-    override suspend fun insertProduct(product: Product) = productDao.insert(product)
+    override fun getAllProducts(): Flow<List<Product>> = productDao.getAllProducts()
 
-    override suspend fun deleteProduct(product: Product) = productDao.delete(product)
+    override suspend fun addQuantity(productId: Int, amount: Int) = productDao.addQuantity(productId, amount)
 
-    override suspend fun updateProduct(product: Product) = productDao.update(product)
+    override suspend fun updateProductSellingPrice(sellingPrice: Double, productId: Int) = productDao.updateSellingPrice(sellingPrice, productId)
+
+    override suspend fun updateProductCostPrice(costPrice: Double, productId: Int) = productDao.updateCostPrice(costPrice, productId)
+
+    override suspend fun getTotalProductsCount(): Flow<Int> = productDao.getTotalProductsCount()
 
     override suspend fun getTotalStockCount(): Flow<Int> = productDao.getTotalStockCount()
 }

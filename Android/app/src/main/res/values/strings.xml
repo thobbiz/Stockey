@@ -35,4 +35,5 @@
     <string name="home">Home</string>
     <string name="revenue">Revenue</string>
     <string name="dashboard">Dashboard</string>
+    <string name="new_sale">New Sale</string>
 </resources>

@@ -16,6 +16,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.project_umbrella.ui.screens.HomeScreens.HomeDestination
 import com.example.project_umbrella.ui.screens.HomeScreens.HomeScreen
+import com.example.project_umbrella.ui.screens.HomeScreens.SaleDestination
+import com.example.project_umbrella.ui.screens.HomeScreens.SaleScreen
 import com.example.project_umbrella.ui.screens.inventory.AddProductDestination
 import com.example.project_umbrella.ui.screens.inventory.AddProductScreen
 import com.example.project_umbrella.ui.screens.inventory.EditProductDestination
@@ -43,7 +45,9 @@ fun InventoryNavHost(
             popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
             popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) }
         ) {
-            HomeScreen()
+            HomeScreen(
+                navigateToSale = { navController.navigate(SaleDestination.route) }
+            )
         }
 
         composable (
@@ -102,6 +106,18 @@ fun InventoryNavHost(
             popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) }
         ) {
             EditProductScreen(
+                navigateBack = { navController.navigateUp() }
+            )
+        }
+
+        composable (
+            route =  SaleDestination.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) }
+        ) {
+            SaleScreen(
                 navigateBack = { navController.navigateUp() }
             )
         }

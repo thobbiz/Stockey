@@ -179,7 +179,7 @@ fun ProductDetails(
            )
             ProductDetailsRow(
                 labelResId = R.string.quantity_in_store,
-                productDetail = "${product.quantity} ${product.measurementUnit}",
+                productDetail = "${product.quantity} ${product.unit}",
                 modifier = Modifier.padding(
                     horizontal = 16.dp
                 )

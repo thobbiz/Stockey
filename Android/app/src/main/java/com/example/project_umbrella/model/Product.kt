@@ -7,10 +7,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "products")
 data class Product(
     @PrimaryKey(autoGenerate = true)
-    val productId: Int = 0,
+    val id: Int = 0,
+    val owner: String,
     val name: String,
     val costPrice: Double,
     val sellingPrice: Double,
     val quantity: Int,
-    val measurementUnit: String
+    val unit: String,
+    val description: String
 )

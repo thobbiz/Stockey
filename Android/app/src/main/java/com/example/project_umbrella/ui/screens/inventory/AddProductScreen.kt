@@ -65,7 +65,7 @@ fun AddProductScreen(
         topBar = {
             AddProductTopAppBar(
                 title = stringResource(R.string.add_new_product),
-                navigateUp = onNavigateUp
+                navigateBack = onNavigateUp
             )
         },
         modifier = Modifier.background(MaterialTheme.colorScheme.primary).fillMaxSize()
@@ -251,7 +251,7 @@ fun AddProductForm(
 @Composable
 fun AddProductTopAppBar(
     title: String,
-    navigateUp: () -> Unit = {}
+    navigateBack: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -260,7 +260,7 @@ fun AddProductTopAppBar(
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 16.dp, start = 10.dp)
     ) {
-        IconButton(onClick = navigateUp, modifier = Modifier.padding(0.dp)) {
+        IconButton(onClick = navigateBack, modifier = Modifier.padding(0.dp)) {
             Icon(
                 imageVector = Filled.Clear,
                 contentDescription = stringResource(R.string.back_button),
