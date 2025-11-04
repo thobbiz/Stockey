@@ -66,6 +66,8 @@ CREATE INDEX ON "orders" ("customer_id");
 
 CREATE INDEX ON "orders" ("created_at");
 
+CREATE INDEX ON "order_products" ("order_id");
+
 CREATE INDEX ON "customers" ("name");
 
 ALTER TABLE "entries" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");

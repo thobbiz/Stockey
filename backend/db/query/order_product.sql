@@ -13,7 +13,7 @@ RETURNING *;
 SELECT * FROM order_products
 WHERE order_id = $1 AND product_id = $2 LIMIT 1;
 
--- name: GetOrderProducts :one
+-- name: GetOrderProducts :many
 SELECT * FROM order_products
 WHERE order_id = $1;
 

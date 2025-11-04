@@ -7,6 +7,8 @@ interface AppContainer {
     val ordersRepository: OrdersRepository
 
     val orderProductsRepository: OrderProductsRepository
+
+    val customersRepository: CustomersRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -21,5 +23,9 @@ class AppDataContainer(private val context: Context) : AppContainer {
 
     override val orderProductsRepository: OrderProductsRepository by lazy {
         OfflineOrderProductsRepository(AppDatabase.getDatabase(context).orderProductDao())
+    }
+
+    override val customersRepository: CustomersRepository by lazy {
+        OfflineCustomersRepository(AppDatabase.getDatabase(context).customerDao())
     }
 }

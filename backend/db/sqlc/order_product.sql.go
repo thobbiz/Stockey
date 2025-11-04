@@ -67,21 +67,37 @@ func (q *Queries) GetOrderProduct(ctx context.Context, arg GetOrderProductParams
 	return i, err
 }
 
-const getOrderProducts = `-- name: GetOrderProducts :one
+const getOrderProducts = `-- name: GetOrderProducts :many
 SELECT order_id, product_id, price, quantity FROM order_products
 WHERE order_id = $1
 `
 
-func (q *Queries) GetOrderProducts(ctx context.Context, orderID int64) (OrderProduct, error) {
-	row := q.db.QueryRowContext(ctx, getOrderProducts, orderID)
-	var i OrderProduct
-	err := row.Scan(
-		&i.OrderID,
-		&i.ProductID,
-		&i.Price,
-		&i.Quantity,
-	)
-	return i, err
+func (q *Queries) GetOrderProducts(ctx context.Context, orderID int64) ([]OrderProduct, error) {
+	rows, err := q.db.QueryContext(ctx, getOrderProducts, orderID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []OrderProduct{}
+	for rows.Next() {
+		var i OrderProduct
+		if err := rows.Scan(
+			&i.OrderID,
+			&i.ProductID,
+			&i.Price,
+			&i.Quantity,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listOrderProducts = `-- name: ListOrderProducts :many

@@ -159,7 +159,7 @@ private fun InventoryItem(product: Product, onProductClick: (Int) -> Unit) {
             .fillMaxWidth()
             .height(60.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable { onProductClick(product.productId) }
+            .clickable { onProductClick(product.id) }
             .padding(horizontal = 0.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {

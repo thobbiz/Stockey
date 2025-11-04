@@ -223,8 +223,8 @@ fun AddProductForm(
         )
 
         OutlinedTextField(
-            value = productInfo.measurementUnit,
-            onValueChange = { onValueChange(productInfo.copy(measurementUnit = it)) },
+            value = productInfo.unit,
+            onValueChange = { onValueChange(productInfo.copy(unit = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             placeholder = { Text( text = stringResource(R.string.measurement_unit),  style = MaterialTheme.typography.bodySmall) },
             textStyle = MaterialTheme.typography.bodySmall,

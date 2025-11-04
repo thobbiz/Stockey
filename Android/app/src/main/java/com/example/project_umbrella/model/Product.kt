@@ -14,5 +14,5 @@ data class Product(
     val sellingPrice: Double,
     val quantity: Int,
     val unit: String,
-    val description: String
+    val description: String? = null
 )

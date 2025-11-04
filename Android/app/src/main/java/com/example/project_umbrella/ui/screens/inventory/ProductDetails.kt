@@ -247,7 +247,7 @@ fun ProductDetailsScreenPreview() {
         ProductDetailsBody(
             ProductDetailsUiState (
                     outOfStock = true,
-                productInfo = ProductInfo(4, "Coaster", "3100.0", "2000.0", "57", measurementUnit = "packs")
+                productInfo = ProductInfo(4, "Coaster", "3100.0", "2000.0", "57", unit = "packs")
                     ),
             onEditProduct = { /*TODO*/ },
             onDelete = { /*TODO*/ }

@@ -90,7 +90,7 @@ fun SaleBody(modifier: Modifier) {
             }
         }
 
-        ScrollableTable()
+//        ScrollableTable()
     }
 }
 

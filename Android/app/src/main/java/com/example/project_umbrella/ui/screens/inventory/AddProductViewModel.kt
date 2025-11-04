@@ -24,7 +24,7 @@ class AddProductViewModel(
     // Checks input fields to check if they are NOT empty
     private fun validateInput(uiState: ProductInfo = productUiState.productInfo): Boolean {
         return with(uiState) {
-            name.isNotBlank() && unitSellingPrice.isNotBlank() && quantity.isNotBlank() && unitCostPrice.isNotBlank() && measurementUnit.isNotBlank()
+            name.isNotBlank() && unitSellingPrice.isNotBlank() && quantity.isNotBlank() && unitCostPrice.isNotBlank() && unit.isNotBlank()
         }
     }
 
@@ -45,22 +45,23 @@ data class ProductUiState(
 
 // Represents product info
 data class ProductInfo(
-    val productId: Int = 0,
+    val id: Int = 0,
     val name: String = "",
     val unitSellingPrice: String = "",
     val unitCostPrice : String = "",
     val quantity: String = "",
-    val measurementUnit: String =""
+    val unit: String =""
 )
 
 // Converts product information to product object
 fun ProductInfo.toProduct(): Product = Product (
-    productId = productId,
+    id = id,
+    owner = "me",
     name = name,
     sellingPrice = unitSellingPrice.toDoubleOrNull() ?: 0.0,
     costPrice = unitCostPrice.toDoubleOrNull() ?: 0.0,
     quantity = quantity.toIntOrNull() ?: 0,
-    measurementUnit = measurementUnit
+    unit = unit
 )
 
 fun Product.formatedCostPrice(): String {
@@ -73,12 +74,12 @@ fun Product.formatedSellingPrice(): String {
 
 // Converts product object to product info
 fun Product.toProductInfo(): ProductInfo = ProductInfo(
-    productId = productId,
+    id = id,
     name = name,
     unitSellingPrice = sellingPrice.toString(),
     unitCostPrice = costPrice.toString(),
     quantity = quantity.toString(),
-    measurementUnit = measurementUnit
+    unit = unit
 )
 
 // Converts product object to product Ui State

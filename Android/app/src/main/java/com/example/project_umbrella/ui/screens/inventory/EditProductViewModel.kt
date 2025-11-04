@@ -45,9 +45,9 @@ class EditProductViewModel(
     }
 
     suspend fun updateProduct() {
-        if (validateInput(productUiState.productInfo)) {
-            productsRepository.updateProduct(productUiState.productInfo.toProduct())
-        }
+//        if (validateInput(productUiState.productInfo)) {
+//            productsRepository.updateProduct(productUiState.productInfo.toProduct())
+//        }
     }
 
 }

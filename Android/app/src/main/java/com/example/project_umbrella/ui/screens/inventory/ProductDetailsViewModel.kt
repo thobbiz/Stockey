@@ -31,7 +31,7 @@ class ProductDetailsViewModel(
     }
 
     suspend fun deleteProduct() {
-        productsRepository.deleteProduct(uiState.value.productInfo.toProduct())
+        productsRepository.deleteProduct(uiState.value.productInfo.toProduct().id)
     }
 }
 
