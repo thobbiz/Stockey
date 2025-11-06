@@ -115,12 +115,12 @@ fun AddProductBody(
                 contentColor = Color.White,
                 disabledContainerColor = Color(0xff3B5975)
             ),
-            shape = RoundedCornerShape(9.dp),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = stringResource(R.string.save),  style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+            Text(text = stringResource(R.string.save),  style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

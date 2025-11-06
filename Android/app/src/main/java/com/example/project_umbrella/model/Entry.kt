@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Entity(tableName = "entries")
 data class Entry(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val productId: Int,
     val quantity: Int,
     val createdAt: LocalDateTime = LocalDateTime.now()

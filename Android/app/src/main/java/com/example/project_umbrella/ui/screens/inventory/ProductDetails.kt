@@ -128,14 +128,14 @@ private fun ProductDetailsBody(
             }
             OutlinedButton(
                 onClick = { deleteConfirmationRequired = true },
-                shape = RoundedCornerShape(5.dp),
+                shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    stringResource(R.string.delete),
+                    text = stringResource(R.string.delete),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )

@@ -5,10 +5,9 @@ import android.content.Context
 interface AppContainer {
     val productsRepository: ProductsRepository
     val ordersRepository: OrdersRepository
-
-    val orderProductsRepository: OrderProductsRepository
-
     val customersRepository: CustomersRepository
+
+    val entryRepository: EntriesRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -21,11 +20,11 @@ class AppDataContainer(private val context: Context) : AppContainer {
         OfflineOrdersRepository(AppDatabase.getDatabase(context).orderDao())
     }
 
-    override val orderProductsRepository: OrderProductsRepository by lazy {
-        OfflineOrderProductsRepository(AppDatabase.getDatabase(context).orderProductDao())
-    }
-
     override val customersRepository: CustomersRepository by lazy {
         OfflineCustomersRepository(AppDatabase.getDatabase(context).customerDao())
+    }
+
+    override val entryRepository: EntriesRepository by lazy {
+        OfflineEntriesRepository(AppDatabase.getDatabase(context).entryDao())
     }
 }

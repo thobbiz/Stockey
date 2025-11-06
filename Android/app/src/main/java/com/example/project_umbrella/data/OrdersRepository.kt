@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrdersRepository {
     // Insert order in the data source
-    suspend fun insertOrder(order: Order): Int
+    suspend fun insertOrder(order: Order)
 
     // Insert orderProducts in the data source
     suspend fun insertOrderProducts(orderProducts: List<OrderProduct>)
 
     // Retrieve a order with orderProducts from the data source
-    fun getOrderWithProducts(orderId: Int): OrderWithProducts?
+    fun getOrderWithProducts(orderId: Int): Flow<OrderWithProducts?>
 
     // Retrieve all orders from the data source
     fun getAllOrders(): Flow<List<OrderWithProducts>>
@@ -29,8 +29,8 @@ interface OrdersRepository {
 
 
     // Update order status in the data source
-    suspend fun updateOrderStatus(orderStatus: String, orderId: Int)
+    suspend fun updateOrderStatus(orderId: Int, orderStatus: String)
 
     // Update order payment method in the data source
-    suspend fun updatePaymentMethod(paymentMethod: String, orderId: Int)
+    suspend fun updatePaymentMethod(orderId: Int, paymentMethod: String)
 }

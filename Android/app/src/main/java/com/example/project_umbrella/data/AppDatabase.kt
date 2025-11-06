@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.project_umbrella.model.Customer
+import com.example.project_umbrella.model.Entry
 import com.example.project_umbrella.model.Order
 import com.example.project_umbrella.model.OrderProduct
 import com.example.project_umbrella.util.Converters
 
 @Database(
-    entities = [Product::class, Order::class, OrderProduct::class, Customer::class],
+    entities = [Product::class, Order::class, OrderProduct::class, Customer::class, Entry::class],
     version = 1,
     exportSchema = false
 )
@@ -20,8 +21,9 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun orderDao(): OrderDao
     abstract fun orderProductDao(): OrderProductDao
-
     abstract fun customerDao(): CustomerDao
+
+    abstract fun entryDao(): EntryDao
 
     companion object{
         @Volatile

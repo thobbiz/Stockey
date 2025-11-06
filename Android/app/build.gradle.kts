@@ -79,4 +79,5 @@ dependencies {
 
     // Y Charts
     implementation(libs.ycharts)
+    testImplementation(kotlin("test"))
 }

@@ -13,19 +13,22 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="daoUpdateCostPrice_returnUpdateProductFromDB()">
+      <SelectionState runConfigName="daoUpdate_updateOrderTotalAmountFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoInsert_insertsCustomerInDB()">
+      <SelectionState runConfigName="daoUpdate_updateOrderStatusFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoInsert_insertsCustomersInDB()">
+      <SelectionState runConfigName="daoUpdate_updateOrderPaymentMethodFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoDelete_deletesCustomersInDB()">
+      <SelectionState runConfigName="daoUpdate_updateOrderStatusMethodFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoInsert_updatesCustomersInDB()">
+      <SelectionState runConfigName="daoGet_getEntryFromDB()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="daoGet_getAllEntriesFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

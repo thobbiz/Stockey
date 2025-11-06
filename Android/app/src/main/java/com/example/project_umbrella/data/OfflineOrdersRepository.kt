@@ -6,11 +6,11 @@ import com.example.project_umbrella.model.OrderWithProducts
 import kotlinx.coroutines.flow.Flow
 
 class OfflineOrdersRepository(private val orderDao: OrderDao): OrdersRepository {
-    override suspend fun insertOrder(order: Order): Int = orderDao.insertOrder(order)
+    override suspend fun insertOrder(order: Order) = orderDao.insertOrder(order)
 
     override suspend fun insertOrderProducts(orderProducts: List<OrderProduct>) = orderDao.insertOrderProducts(orderProducts)
 
-    override  fun getOrderWithProducts(orderId: Int): OrderWithProducts? = orderDao.getOrderWithProducts(orderId)
+    override  fun getOrderWithProducts(orderId: Int): Flow<OrderWithProducts?> = orderDao.getOrderWithProducts(orderId)
 
     override fun getAllOrders(): Flow<List<OrderWithProducts>> = orderDao.getAllOrders()
 
@@ -20,7 +20,7 @@ class OfflineOrdersRepository(private val orderDao: OrderDao): OrdersRepository 
 
     override suspend fun deleteOrder(orderId: Int) = orderDao.deleteOrder(orderId)
 
-    override suspend fun updateOrderStatus(orderStatus: String, orderId: Int) = orderDao.updateOrderStatus(orderStatus, orderId)
+    override suspend fun updateOrderStatus(orderId: Int, orderStatus: String) = orderDao.updateOrderStatus(orderId, orderStatus)
 
-    override suspend fun updatePaymentMethod(paymentMethod: String, orderId: Int) = orderDao.updatePaymentMethod(paymentMethod, orderId)
+    override suspend fun updatePaymentMethod(orderId: Int, paymentMethod: String) = orderDao.updatePaymentMethod(orderId, paymentMethod)
 }
