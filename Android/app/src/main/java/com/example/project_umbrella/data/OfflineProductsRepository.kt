@@ -13,9 +13,11 @@ class OfflineProductsRepository(private val productDao: ProductDao): ProductsRep
 
     override suspend fun addQuantity(productId: Int, amount: Int) = productDao.addQuantity(productId, amount)
 
-    override suspend fun updateProductSellingPrice(sellingPrice: Double, productId: Int) = productDao.updateSellingPrice(productId, sellingPrice)
+    override suspend fun removeQuantity(productId: Int, amount: Int) = productDao.removeQuantity(productId, amount)
 
-    override suspend fun updateProductCostPrice(costPrice: Double, productId: Int) = productDao.updateCostPrice(productId, costPrice)
+    override suspend fun updateProductSellingPrice(productId: Int, sellingPrice: Double) = productDao.updateSellingPrice(productId, sellingPrice)
+
+    override suspend fun updateProductCostPrice(productId: Int, costPrice: Double) = productDao.updateCostPrice(productId, costPrice)
 
     override suspend fun getTotalProductsCount(): Flow<Int> = productDao.getTotalProductsCount()
 

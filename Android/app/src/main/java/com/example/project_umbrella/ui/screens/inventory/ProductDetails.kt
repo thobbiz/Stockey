@@ -55,7 +55,7 @@ object ProductDetailsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
-    navigateToEditItem: () -> Unit,
+    navigateToEditItem: (Int) -> Unit,
     navigateBack: () -> Unit,
     viewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -79,7 +79,7 @@ fun ProductDetailsScreen(
                     navigateBack()
                 }
             },
-            onEditProduct = navigateToEditItem,
+            onEditProduct = {navigateToEditItem(uiState.value.productInfo.id)},
             modifier = Modifier
                 .fillMaxSize()
                 .padding(

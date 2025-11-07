@@ -133,6 +133,10 @@ fun AddProductForm(
     enabled: Boolean = true
 ) {
 
+    val locale = Locale("en", "NG")
+    val currencyNG = Currency.getInstance(locale)
+    val symbolNG = currencyNG.getSymbol(locale).trim()
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -145,15 +149,15 @@ fun AddProductForm(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xffcbc7c7),
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                unfocusedBorderColor = Color(0xff34373c),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
 
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .border(0.dp, Color.Unspecified, RoundedCornerShape(12.dp))
-                .height(55.dp),
+                .height(50.dp),
             enabled = enabled,
             singleLine = true
         )
@@ -167,15 +171,15 @@ fun AddProductForm(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xffcbc7c7),
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                unfocusedBorderColor = Color(0xff34373c),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, Color.Unspecified, RoundedCornerShape(12.dp))
-                .height(55.dp),
-            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
+                .height(50.dp),
+            leadingIcon = { Text(symbolNG) },
             enabled = enabled,
             singleLine = true
         )
@@ -189,14 +193,14 @@ fun AddProductForm(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xffcbc7c7),
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                unfocusedBorderColor = Color(0xff34373c),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, Color.Unspecified, RoundedCornerShape(12.dp))
-                .height(55.dp),
+                .height(50.dp),
             enabled = enabled,
             singleLine = true
         )
@@ -205,19 +209,19 @@ fun AddProductForm(
             value = productInfo.quantity,
             onValueChange = { onValueChange(productInfo.copy(quantity = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            placeholder = { Text("Quantity in Stock",  style = MaterialTheme.typography.bodySmall) },
+            placeholder = { Text(text = stringResource(R.string.quantity_in_store),  style = MaterialTheme.typography.bodySmall) },
             textStyle = MaterialTheme.typography.bodySmall,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xffcbc7c7),
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                unfocusedBorderColor = Color(0xff34373c),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             ),
             modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, Color.Unspecified, RoundedCornerShape(12.dp))
-                .height(55.dp),
+                .height(50.dp),
             enabled = enabled,
             singleLine = true
         )
@@ -231,14 +235,14 @@ fun AddProductForm(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xffcbc7c7),
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                unfocusedBorderColor = Color(0xff34373c),
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, Color.Unspecified, RoundedCornerShape(12.dp))
-                .height(55.dp),
+                .border(5.dp, Color.Unspecified, RoundedCornerShape(12.dp))
+                .height(50.dp),
             enabled = enabled,
             singleLine = true
         )

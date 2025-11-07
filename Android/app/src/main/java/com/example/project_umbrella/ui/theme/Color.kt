@@ -9,7 +9,7 @@ val light_background = Color(0xffffffff)
 
 
 val dark_primary = Color.Black
-val dark_tertiary_container = Color(0xff23272a)
+val dark_tertiary_container = Color(0xff2c2f33)
 
-val dark_background = Color(0xff1e2124)
+val dark_background = Color(0xff1a1d22)
 val dark_on_primary = Color.White

@@ -45,9 +45,10 @@ class EditProductViewModel(
     }
 
     suspend fun updateProduct() {
-//        if (validateInput(productUiState.productInfo)) {
-//            productsRepository.updateProduct(productUiState.productInfo.toProduct())
-//        }
+        if (validateInput(productUiState.productInfo)) {
+            productsRepository.updateProductCostPrice(productUiState.productInfo.toProduct().id, productUiState.productInfo.toProduct().costPrice)
+            productsRepository.updateProductSellingPrice(productUiState.productInfo.toProduct().id, productUiState.productInfo.toProduct().sellingPrice)
+        }
     }
 
 }

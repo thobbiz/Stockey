@@ -1,10 +1,15 @@
 package com.example.project_umbrella.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -40,10 +45,10 @@ fun InventoryNavHost(
     ) {
         composable(
             route = HomeDestination.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
         ) {
             HomeScreen(
                 navigateToSale = { navController.navigate(SaleDestination.route) }
@@ -52,10 +57,10 @@ fun InventoryNavHost(
 
         composable (
             route = InventoryDestination.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) }
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
         ) {
             InventoryScreen(
                 navigateToProductEntry = { navController.navigate(AddProductDestination.route) },
@@ -65,10 +70,26 @@ fun InventoryNavHost(
 
         composable (
             route  = AddProductDestination.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) }
+            enterTransition = {
+                slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(250)
+                ) + fadeIn(
+                    animationSpec = tween(250),
+                    initialAlpha = 0.5f
+                )
+                              },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = {
+                slideOutVertically (
+                    targetOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(250)
+                ) + fadeOut(
+                    animationSpec = tween(250),
+                    targetAlpha = 0.5f
+                )
+            }
         ){
             AddProductScreen(
                 navigateBack = { navController.navigateUp() },
@@ -85,25 +106,23 @@ fun InventoryNavHost(
                     animationSpec = tween(300, easing = FastOutSlowInEasing)
                 ) + fadeIn(animationSpec = tween(250))
             },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(300)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(300)) }
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(250)) }
         ){
             ProductDetailsScreen(
-                navigateToEditItem = { navController.navigate(EditProductDestination.route) },
+                navigateToEditItem = { navController.navigate("${EditProductDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() }
             )
         }
 
         composable (
             route =  EditProductDestination.routeWithArgs,
-            arguments = listOf(navArgument(EditProductDestination.productIdArg) {
-                type = NavType.IntType
-            }),
-            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) }
+            arguments = listOf(navArgument(EditProductDestination.productIdArg) { type = NavType.IntType }),
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(250)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(250)) }
         ) {
             EditProductScreen(
                 navigateBack = { navController.navigateUp() }
@@ -112,10 +131,10 @@ fun InventoryNavHost(
 
         composable (
             route =  SaleDestination.route,
-            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(500)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(500)) }
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(250)) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = tween(250)) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }, animationSpec = tween(250)) }
         ) {
             SaleScreen(
                 navigateBack = { navController.navigateUp() }
@@ -126,6 +145,12 @@ fun InventoryNavHost(
 
 fun NavHostController.navigateTo(navigationDestination: NavigationDestination) {
     this.navigate(navigationDestination.route) {
+        anim {
+            enter = 0
+            exit = 0
+            popEnter = 0
+            popExit = 0
+        }
         launchSingleTop = true
         popUpTo(navigationDestination.route)
     }

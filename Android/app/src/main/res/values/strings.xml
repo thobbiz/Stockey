@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">project-umbrella</string>
-    <string name="product_name">Product Name</string>
+    <string name="product_name">Name</string>
     <string name="required_fields">All are Required Fields</string>
-    <string name="add_new_product">Add New Product</string>
+    <string name="add_new_product">New Product</string>
     <string name="back_button">Back Button</string>
     <string name="cancel">Cancel</string>
     <string name="edit_product">Edit Product</string>
@@ -31,9 +31,10 @@
     <string name="total_products">Total Products</string>
     <string name="total_stocks">Stock in Hand</string>
     <string name="products_list">Products list</string>
-    <string name="measurement_unit">Measurement unit</string>
+    <string name="measurement_unit">Unit</string>
     <string name="home">Home</string>
     <string name="revenue">Revenue</string>
     <string name="dashboard">Dashboard</string>
     <string name="new_sale">New Sale</string>
+    <string name="save_edit">Save Edit</string>
 </resources>
