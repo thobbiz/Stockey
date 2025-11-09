@@ -22,7 +22,7 @@ interface OrdersRepository {
     suspend fun updateOrderTotal(orderId: Int, total: Double)
 
     // Calculate order total amount
-    suspend fun calculateOrderTotal(orderId: Int): Double?
+    fun calculateOrderTotal(orderId: Int): Flow<Double>
 
     // Delete order from the data source
     suspend fun deleteOrder(orderId: Int)

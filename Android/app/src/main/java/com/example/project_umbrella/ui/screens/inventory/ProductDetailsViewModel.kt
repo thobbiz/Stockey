@@ -14,7 +14,6 @@ class ProductDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val productsRepository: ProductsRepository
 ): ViewModel() {
-
     private val productId: Int = checkNotNull(savedStateHandle[ProductDetailsDestination.productIdArg])
     val uiState: StateFlow<ProductDetailsUiState> = productsRepository.getProduct(productId)
         .filterNotNull()

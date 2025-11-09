@@ -13,40 +13,39 @@ import kotlinx.coroutines.launch
 
 
 class InventoryScreenViewModel(productsRepository: ProductsRepository) : ViewModel() {
-
-
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
-    val inventoryUiState: StateFlow<InventoryUiState> = productsRepository.getAllProducts().map { InventoryUiState(it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = InventoryUiState()
-        )
 
-    private val _totalProducts = MutableStateFlow(0)
-    val totalProducts: StateFlow<Int> = _totalProducts
+    private val _totalProductsCount = MutableStateFlow(0)
+    private val _totalStocksCount = MutableStateFlow(0)
+    val totalProductCount: StateFlow<Int> = _totalProductsCount
+    val totalStockCount: StateFlow<Int> = _totalStocksCount
 
-    init {
-        viewModelScope.launch {
-            productsRepository.getTotalProductsCount().collect { count ->
-                _totalProducts.value = count
-            }
-        }
-    }
-
-    private val _totalStocks = MutableStateFlow(0)
-    val totalStockCount: StateFlow<Int> = _totalStocks
+    val inventoryUiState: StateFlow<InventoryUiState> =
+        productsRepository.getAllProducts().map { InventoryUiState(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = InventoryUiState()
+            )
 
     init {
         viewModelScope.launch {
             productsRepository.getTotalStockCount().collect{ count ->
-                _totalStocks.value = count
+                _totalStocksCount.value = count
+            }
+
+            productsRepository.getTotalProductsCount().collect { count ->
+                _totalProductsCount.value = count
             }
         }
     }
 
 }
 
-data class InventoryUiState(val productsList: List<Product> = listOf())
+data class InventoryUiState(
+    val productsList: List<Product> = listOf(),
+    val totalProductCount: Int = 0,
+    val totalStockCount: Int = 0
+)

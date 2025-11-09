@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -72,10 +73,12 @@ fun SaleBody(modifier: Modifier) {
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
+                .height(50.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize(0.8f)
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.contact),
@@ -83,7 +86,7 @@ fun SaleBody(modifier: Modifier) {
                 )
                 Spacer(modifier = modifier.size(10.dp))
                 Text(
-                    stringResource(R.string.delete),
+                    text = stringResource(R.string.customers),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )

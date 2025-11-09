@@ -68,8 +68,8 @@ fun InventoryScreen(
     viewModel: InventoryScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val inventoryUiState by viewModel.inventoryUiState.collectAsState()
-    val totalProducts by viewModel.totalProducts.collectAsState()
-    val totalStocks by viewModel.totalStockCount.collectAsState()
+    val totalProductCount by viewModel.totalProductCount.collectAsState()
+    val totalStockCount by viewModel.totalStockCount.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -98,8 +98,8 @@ fun InventoryScreen(
     ) { innerPadding ->
         InventoryBody(
             productList = inventoryUiState.productsList,
-            totalProducts = totalProducts,
-            totalStocks = totalStocks,
+            totalProductCount= totalProductCount,
+            totalStockCount = totalStockCount,
             navigateToProduct = navigateToProductDetail,
             modifier = Modifier
                 .fillMaxSize()
@@ -117,8 +117,8 @@ fun InventoryScreen(
 @Composable
 private fun InventoryBody(
     productList: List<Product>,
-    totalProducts: Int,
-    totalStocks: Int,
+    totalProductCount: Int,
+    totalStockCount: Int,
     navigateToProduct: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -140,8 +140,8 @@ private fun InventoryBody(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TotalProducts(totalProducts = totalProducts)
-                    TotalStocks(totalStocks = totalStocks)
+                    TotalProducts(totalProducts = totalProductCount)
+                    TotalStocks(totalStocks = totalStockCount)
                 }
             }
 

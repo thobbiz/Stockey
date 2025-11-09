@@ -14,7 +14,7 @@ class OfflineOrdersRepository(private val orderDao: OrderDao): OrdersRepository 
 
     override fun getAllOrders(): Flow<List<OrderWithProducts>> = orderDao.getAllOrders()
 
-    override suspend fun calculateOrderTotal(orderId: Int): Double? = orderDao.calculateOrderTotal(orderId)
+    override fun calculateOrderTotal(orderId: Int): Flow<Double> = orderDao.calculateOrderTotal(orderId)
 
     override suspend fun updateOrderTotal(orderId: Int, total: Double) = orderDao.updateOrderTotal(orderId, total)
 

@@ -130,11 +130,9 @@ class OrderDaoTest {
     fun daoUpdate_updateOrderTotalAmountFromDB() = runBlocking {
         addTwoProductsToDb()
         addOrderToDb()
-        val totalAmount = orderDao.calculateOrderTotal(order1.id)
+        val totalAmount = orderDao.calculateOrderTotal(order1.id).first()
         assertNotNull(totalAmount)
-        totalAmount?.let {
-            updateOrderTotalAmountToDb(it)
-        }
+        updateOrderTotalAmountToDb(totalAmount)
         val order = orderDao.getOrderWithProducts(order1.id).first()
         assertNotNull(order)
         assertNotEquals(order1.totalAmount, order?.order?.totalAmount)

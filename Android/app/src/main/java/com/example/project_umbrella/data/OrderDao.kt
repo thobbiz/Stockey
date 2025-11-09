@@ -34,7 +34,7 @@ interface OrderDao {
         FROM order_products 
         WHERE orderId = :orderId
     """)
-    suspend fun calculateOrderTotal(orderId: Int): Double?
+    fun calculateOrderTotal(orderId: Int): Flow<Double>
 
     @Query("UPDATE orders SET orderStatus = :orderStatus WHERE id = :orderId")
     suspend fun updateOrderStatus(orderId: Int, orderStatus: String)
